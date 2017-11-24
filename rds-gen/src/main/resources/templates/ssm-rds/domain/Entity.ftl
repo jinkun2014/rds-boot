@@ -27,7 +27,7 @@ public class ${EntityInfo.entityName} implements Serializable {<#-- 类名 -->
 
 <#if fieldInfo.remarks?? && fieldInfo.remarks != "">
     /**
-     * ${fieldInfo.remarks}
+     * ${fieldInfo.remarks}，column: ${fieldInfo.columnName}
      */
 </#if>
     ${fieldInfo.modifier} ${fieldInfo.type} ${fieldInfo.name};
