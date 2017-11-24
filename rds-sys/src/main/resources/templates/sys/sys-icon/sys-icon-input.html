@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>图标</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}" href="../../../static/css/common.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5/themes/gray/easyui.css}"  href="../../../static/js/jquery-easyui-1.5/themes/gray/easyui.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5/themes/icon.css}" href="../../../static/js/jquery-easyui-1.5/themes/icon.css"/>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/jquery.min.js}"  src="../../../static/js/jquery-easyui-1.5/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/jquery.easyui.min.js}"  src="../../../static/js/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/locale/easyui-lang-zh_CN.js}"  src="../../../static/js/jquery-easyui-1.5/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+    <form id="SysIconForm" method="post">
+        <table align="center" class="com_table">
+            <input type="hidden" name="id"/>
+            <tr>
+                <td></td>
+                <td><label>名称:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="name" data-options="required:false"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>链接:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="url" data-options="required:false"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>类型:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="type" data-options="required:false"/></td>
+                <td></td>
+            </tr>
+        </table>
+    </form>
+    <script th:src="@{/js/sys/sys-icon/sys-icon.js}" src="../../../static/js/sys/sys-icon/sys-icon.js"></script>
+    <script>
+        SysIcon.input.init('');
+    </script>
+</body>
+</html>

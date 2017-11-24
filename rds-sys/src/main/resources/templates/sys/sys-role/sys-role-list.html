@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>角色</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}" href="../../../static/css/common.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5/themes/gray/easyui.css}"  href="../../../static/js/jquery-easyui-1.5/themes/gray/easyui.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5/themes/icon.css}" href="../../../static/js/jquery-easyui-1.5/themes/icon.css"/>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/jquery.min.js}"  src="../../../static/js/jquery-easyui-1.5/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/jquery.easyui.min.js}"  src="../../../static/js/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/locale/easyui-lang-zh_CN.js}"  src="../../../static/js/jquery-easyui-1.5/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+    <!-- 工具栏 -->
+    <div id="SysRoleToolbar"  style="padding:5px;height:auto">
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" plain="true" onclick="javascript:SysRole.list.add()">增加</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" plain="true" onclick="javascript:SysRole.list.delete()">删除</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" plain="true" onclick="javascript:SysRole.list.edit()">编辑</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" plain="true" onclick="javascript:SysRole.list.reload()">刷新</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" plain="true" onclick="javascript:SysRole.list.authorize()">授权</a>
+        <span style="float: right;margin-right: 10px;padding: 1px">
+        </span>
+    </div>
+    <!-- 列表 -->
+    <table id="SysRoleList" data-options="border:false" style="width: 100%;" title="角色"></table>
+    <script th:src="@{/js/sys/sys-role/sys-role.js}" src="../../../static/js/sys/sys-role/sys-role.js"></script>
+    <script>
+        SysRole.list.init('');
+    </script>
+</body>
+</html>

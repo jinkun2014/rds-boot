@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>用户</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}" href="../../../static/css/common.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5/themes/gray/easyui.css}"  href="../../../static/js/jquery-easyui-1.5/themes/gray/easyui.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5/themes/icon.css}" href="../../../static/js/jquery-easyui-1.5/themes/icon.css"/>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/jquery.min.js}"  src="../../../static/js/jquery-easyui-1.5/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/jquery.easyui.min.js}"  src="../../../static/js/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/locale/easyui-lang-zh_CN.js}"  src="../../../static/js/jquery-easyui-1.5/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+    <!-- 工具栏 -->
+    <div id="SysUserToolbar"  style="padding:5px;height:auto">
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" plain="true" onclick="javascript:SysUser.list.add()">增加</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" plain="true" onclick="javascript:SysUser.list.delete()">删除</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" plain="true" onclick="javascript:SysUser.list.edit()">编辑</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" plain="true" onclick="javascript:SysUser.list.reload()">刷新</a>
+        <span style="float: right;margin-right: 10px;padding: 1px">
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" plain="true" onclick="javascript:SysUser.list.search()">搜索</a>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-clear'" plain="true" onclick="javascript:SysUser.list.clear()">清除</a>
+        </span>
+        <span style="float: right;margin-right: 10px;padding-top: 3px">
+            用户名: <input lang="searchSysUser" name="name" style="line-height:19px;border:1px solid #ccc"/>
+        </span>
+    </div>
+    <div class="easyui-panel" data-options="fit:true,border:false">
+        <div class="easyui-layout" data-options="fit:true">
+            <div data-options="region:'west',title:'组织机构',split:true,border:false" style="width:15%;">
+                <!-- 模块列表 -->
+                <ul id="SysUserOrgTree"></ul>
+            </div>
+            <div data-options="region:'center',border:false">
+                <!-- 列表 -->
+                <table id="SysUserList" data-options="border:false" style="width: 100%;" title="用户"></table>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/sys/sys-user/sys-user.js}" src="../../../static/js/sys/sys-user/sys-user.js"></script>
+    <script>
+        SysUser.list.init('');
+    </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>角色</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}" href="../../../static/css/common.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5/themes/gray/easyui.css}"  href="../../../static/js/jquery-easyui-1.5/themes/gray/easyui.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5/themes/icon.css}" href="../../../static/js/jquery-easyui-1.5/themes/icon.css"/>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/jquery.min.js}"  src="../../../static/js/jquery-easyui-1.5/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/jquery.easyui.min.js}"  src="../../../static/js/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/locale/easyui-lang-zh_CN.js}"  src="../../../static/js/jquery-easyui-1.5/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+    <form id="SysRoleForm" method="post">
+        <table align="center" class="com_table">
+            <input type="hidden" name="id"/>
+            <tr>
+                <td></td>
+                <td><label>角色名:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="name" data-options="required:false"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>排序号:</label></td>
+                <td><input class="easyui-numberspinner" type="text" name="seq" data-options="min:0,max:10000,editable:true,required:false,value:0"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>简介:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="description" data-options="required:false"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>状态:</label></td>
+                <td>
+                    <select class="easyui-combobox  com_input" name="status" data-options="panelHeight:'auto',value:'0'" style="width:173px;">
+                        <option value="0">启用</option>
+                        <option value="1">停用</option>
+                    </select>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+    </form>
+    <script th:src="@{/js/sys/sys-role/sys-role.js}" src="../../../static/js/sys/sys-role/sys-role.js"></script>
+    <script>
+        SysRole.input.init('');
+    </script>
+</body>
+</html>

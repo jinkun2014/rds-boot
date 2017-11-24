@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>设置数据源</title>
+</head>
+<body>
+<form id="form" method="post">
+    <table align="center" style="border-collapse:separate; border-spacing:0px 5px;">
+        <tr>
+            <td></td>
+            <td><label>数据库:</label></td>
+            <td>
+                <input class="easyui-textbox" id="dialect" name="dialect"
+                       data-options="required:true" th:value="${dialect}" style="width: 350px;"/>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><label>URL:</label></td>
+            <td><input class="easyui-textbox" id="url" name="url"
+                       data-options="required:true" th:value="${url}" style="width: 350px;"/>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><label>用户名:</label></td>
+            <td><input class="easyui-textbox" id="username" name="username"
+                       data-options="required:true" th:value="${username}" style="width: 350px;"/></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><label>密码:</label></td>
+            <td><input class="easyui-textbox" id="password" name="password"
+                       data-options="required:true" th:value="${password}" style="width: 350px;"/></td>
+            <td></td>
+        </tr>
+    </table>
+</form>
+<script>
+    function isFormValid() {
+        return $("#form").form('validate');
+    }
+
+    function getDataSource() {
+        return {
+            dialect: $("#dialect").textbox("getValue"),
+            url: $('#url').textbox("getValue"),
+            username: $('#username').textbox("getValue"),
+            password: $('#password').textbox("getValue")
+        };
+    }
+</script>
+</body>
+</html>

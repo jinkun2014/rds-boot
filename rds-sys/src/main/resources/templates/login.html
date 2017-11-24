@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>登录</title>
+    <!-- 引入公共样式-->
+    <div th:replace="head"></div>
+
+</head>
+<body>
+<div style="width:500px;margin:150px auto;">
+    <div class="easyui-panel" title="欢迎登录"
+         style="width:450px;height:300px;padding:10px;text-align:center; overflow:hidden;"
+         data-options="closable:false,collapsible:false,minimizable:false,maximizable:false">
+        <form id="loginForm" method="post">
+            <input type="hidden" name="id"/>
+            <table style="margin:50px auto;">
+                <tr>
+                    <td></td>
+                    <td><label>登录名:</label></td>
+                    <td><input class="easyui-textbox" type="text" id="loginName" name="loginName"
+                               data-options="required:true,value:'admin'" style="width: 180px"/></td>
+                    <td></td>
+                </tr>
+                <tr style="height: 10px;"></tr>
+                <tr>
+                    <td></td>
+                    <td><label>密&nbsp;码:</label></td>
+                    <td><input class="easyui-passwordbox" type="text" id="password" name="password"
+                               data-options="required:true,value:'123456'" style="width: 180px"/></td>
+                    <td></td>
+                </tr>
+                <tr style="height: 20px;"></tr>
+                <tr>
+                    <td colspan="4" align="center">
+                        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'"
+                           onclick="javascript:login()">登录</a>
+                        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'"
+                           onclick="javascript:void(0)">返回</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+<!-- 引入公共js -->
+<div th:replace="script"></div>
+
+<!-- 引入私有js -->
+<script type="text/javascript" th:src="@{/js/login.js}" src="../static/js/login.js"></script>
+</body>
+</html>

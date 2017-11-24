@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.jinkun.rds.sys.mapper.IIconMapper">
+
+    <!--配置了autoMapping=true,其他的无需配置，将会自动映射-->
+    <resultMap id="iconResultMap" type="me.jinkun.rds.sys.entity.Icon" autoMapping="true"/>
+
+    <!--公共sql，其他Mapper可以调用-->
+    <sql id="commonFieldSql">
+        <choose>
+            <when test="fields == null or fields.size() == 0">*</when>
+            <otherwise>
+                <foreach collection="fields" separator="," item="field">${field}</foreach>
+            </otherwise>
+        </choose>
+    </sql>
+
+    <sql id="commonIdsSql">
+        <foreach collection="ids" open="WHERE id IN(" item="id" separator="," close=")">#{id}</foreach>
+    </sql>
+
+    <sql id="selectIconSql">
+        <where>
+            <choose>
+                <when test="icon==null"></when>
+                <otherwise>
+                    <if test="icon.id!=null">AND id=#{icon.id}</if>
+                    <if test="icon.name!=null">AND name=#{icon.name}</if>
+                    <if test="icon.url!=null">AND url=#{icon.url}</if>
+                    <if test="icon.type!=null">AND type=#{icon.type}</if>
+                    <if test="icon.delete!=null">AND is_delete=#{icon.delete}</if>
+                    <if test="icon.gmtUpdate!=null">AND gmt_update=#{icon.gmtUpdate}</if>
+                    <if test="icon.gmtCreate!=null">AND gmt_create=#{icon.gmtCreate}</if>
+                </otherwise>
+            </choose>
+        </where>
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="icon.id">
+        INSERT INTO sys_icon
+        (
+        id,
+        name,
+        url,
+        type,
+        is_delete,
+        gmt_update,
+        gmt_create
+        )
+        VALUES
+        (
+        #{icon.id},
+        #{icon.name},
+        #{icon.url},
+        #{icon.type},
+        #{icon.delete},
+        #{icon.gmtUpdate},
+        #{icon.gmtCreate}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE sys_icon
+        <set>
+            <if test="icon.name != null">
+            name = #{icon.name},
+            </if>
+            <if test="icon.url != null">
+            url = #{icon.url},
+            </if>
+            <if test="icon.type != null">
+            type = #{icon.type},
+            </if>
+            <if test="icon.delete != null">
+            is_delete = #{icon.delete},
+            </if>
+            <if test="icon.gmtUpdate != null">
+            gmt_update = #{icon.gmtUpdate},
+            </if>
+            <if test="icon.gmtCreate != null">
+            gmt_create = #{icon.gmtCreate}
+            </if>
+        </set>
+        WHERE id = #{icon.id}
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM sys_icon
+        <include refid="selectIconSql"/>
+    </delete>
+
+    <delete id="deleteByIds">
+        DELETE
+        FROM sys_icon
+        <include refid="commonIdsSql"/>
+    </delete>
+
+    <select id="loadCount" resultType="int">
+        SELECT COUNT(id)
+        FROM sys_icon
+        <include refid="selectIconSql"/>
+    </select>
+
+    <select id="loadByPK" resultMap="iconResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_icon
+        WHERE id = #{id}
+    </select>
+
+    <select id="loads" resultMap="iconResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_icon
+        <include refid="selectIconSql"/>
+    </select>
+
+</mapper>

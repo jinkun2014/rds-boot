@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>资源</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}" href="../../../static/css/common.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5/themes/gray/easyui.css}"  href="../../../static/js/jquery-easyui-1.5/themes/gray/easyui.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5/themes/icon.css}" href="../../../static/js/jquery-easyui-1.5/themes/icon.css"/>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/jquery.min.js}"  src="../../../static/js/jquery-easyui-1.5/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/jquery.easyui.min.js}"  src="../../../static/js/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/locale/easyui-lang-zh_CN.js}"  src="../../../static/js/jquery-easyui-1.5/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+    <form id="SysResourceForm" method="post">
+        <table align="center" class="com_table">
+            <input type="hidden" name="id"/>
+            <tr>
+                <td></td>
+                <td><label>资源名称:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="name" data-options="required:false"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>资源路径:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="url" data-options="required:false"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>打开方式:</label></td>
+                <td>
+                    <select class="easyui-combobox" name="openMode" data-options="panelHeight:'auto',value:'0'">
+                        <option value="0">ajax</option>
+                        <option value="1">iframe</option>
+                    </select>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>资源介绍:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="description" data-options="required:false,multiline:true,height:100"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>资源图标:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="icon" data-options="required:false"/></td>
+                <td>
+                    <a href="#" class="easyui-linkbutton" onclick="javascript:SysResource.input.chooseIcon()">选择</a>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>上级资源</label></td>
+                <td>
+                    <select id="parentResource" class="easyui-combobox com_input" name="pid" data-options="textField:'text',valueField:'id'"></select>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>排序:</label></td>
+                <td><input class="easyui-numberspinner" type="text" name="seq" data-options="min:0,max:10000,editable:true,required:false,value:0"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>状态:</label></td>
+                <td>
+                    <select class="easyui-combobox" name="status" data-options="panelHeight:'auto',value:'0'" style="width:173px;">
+                        <option value="0">启用</option>
+                        <option value="1">停用</option>
+                    </select>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>资源类别:</label></td>
+                <td>
+                    <select class="easyui-combobox" name="resourceType" data-options="panelHeight:'auto',value:'0'" style="width:173px;">
+                        <option value="0">菜单</option>
+                        <option value="1">按钮</option>
+                    </select>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+    </form>
+    <script th:src="@{/js/sys/sys-resource/sys-resource.js}" src="../../../static/js/sys/sys-resource/sys-resource.js"></script>
+    <script>
+        SysResource.input.init('');
+    </script>
+</body>
+</html>

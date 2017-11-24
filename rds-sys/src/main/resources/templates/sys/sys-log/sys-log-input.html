@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>日志</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}" href="../../../static/css/common.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5/themes/gray/easyui.css}"  href="../../../static/js/jquery-easyui-1.5/themes/gray/easyui.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5/themes/icon.css}" href="../../../static/js/jquery-easyui-1.5/themes/icon.css"/>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/jquery.min.js}"  src="../../../static/js/jquery-easyui-1.5/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/jquery.easyui.min.js}"  src="../../../static/js/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-easyui-1.5/locale/easyui-lang-zh_CN.js}"  src="../../../static/js/jquery-easyui-1.5/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+    <form id="SysLogForm" method="post">
+        <table align="center" class="com_table">
+            <input type="hidden" name="id"/>
+            <tr>
+                <td></td>
+                <td><label>时间:</label></td>
+                <td><input class="easyui-datetimebox com_input" type="text" name="time" data-options="required:false,showSeconds:true"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>IP地址:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="ip" data-options="required:false"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>登录名:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="loginName" data-options="required:false"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>访问链接:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="url" data-options="required:false"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>访问的类:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="clazz" data-options="required:false"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>访问的方法:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="method" data-options="required:false"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>模块:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="moudle" data-options="required:false"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>功能:</label></td>
+                <td><input class="easyui-textbox com_input" type="text" name="function" data-options="required:false"/></td>
+                <td></td>
+            </tr>
+        </table>
+    </form>
+    <script th:src="@{/js/sys/sys-log/sys-log.js}" src="../../../static/js/sys/sys-log/sys-log.js"></script>
+    <script>
+        SysLog.input.init('');
+    </script>
+</body>
+</html>
