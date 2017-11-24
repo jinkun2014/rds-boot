@@ -3,8 +3,8 @@ package ${EntityInfo.packageInfo.dao};
 
 import ${EntityInfo.packageInfo.entity}.${EntityInfo.entityName};
 <#-- import -->
-import me.jinkun.rds.core.IPage;
-import me.jinkun.rds.core.ISort;
+import me.jinkun.rds.core.page.IPage;
+import me.jinkun.rds.core.sort.ISort;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

@@ -2,8 +2,8 @@
 package ${EntityInfo.packageInfo.service};
 
 import ${EntityInfo.packageInfo.entity}.${EntityInfo.entityName};
-import me.jinkun.rds.core.IPage;
-import me.jinkun.rds.core.ISort;
+import me.jinkun.rds.core.page.IPage;
+import me.jinkun.rds.core.sort.ISort;
 import java.util.*;
 
 

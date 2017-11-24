@@ -1,8 +1,8 @@
 <#-- package -->
 package ${EntityInfo.packageInfo.serviceImpl};
 
-import me.jinkun.rds.core.IPage;
-import me.jinkun.rds.core.ISort;
+import me.jinkun.rds.core.page.IPage;
+import me.jinkun.rds.core.sort.ISort;
 import ${EntityInfo.packageInfo.dao}.${EntityInfo.daoName};
 import ${EntityInfo.packageInfo.entity}.${EntityInfo.entityName};
 import ${EntityInfo.packageInfo.service}.${EntityInfo.serviceName};
