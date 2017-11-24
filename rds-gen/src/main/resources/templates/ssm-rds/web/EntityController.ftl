@@ -80,7 +80,7 @@ public class ${EntityInfo.entityName}Controller extends CommonController {
         Set<ISort> sortSet = Sets.newHashSet(new Sorter("id", false));
         List<${EntityInfo.entityName}> ${EntityInfo.entityName ? uncap_first }List = totalRecordCount == 0 ? Collections.EMPTY_LIST : ${EntityInfo.serviceName ? uncap_first }.loads(${EntityInfo.entityName ? uncap_first },null, sortSet, page);
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("totalRecordCount", totalRecordCount);
+        resultMap.put("total", totalRecordCount);
         resultMap.put("list", ${EntityInfo.entityName ? uncap_first }List);
         return setJsonViewData(resultMap);
     }

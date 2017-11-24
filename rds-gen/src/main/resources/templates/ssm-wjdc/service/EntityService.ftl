@@ -55,7 +55,7 @@ public interface ${EntityInfo.serviceName} {
     /**
      * 根据ids批量删除
      *
-     * @param idSets
+     * @param ids
      * @return
      */
     boolean deleteByIds(Set<${EntityInfo.primaryKey.type}> ids);

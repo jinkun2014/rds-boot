@@ -61,9 +61,9 @@ public class EngineMain {
         fieldInfo.setColumnType(UtilType.getJdbcType(columnType));
         fieldInfo.setDefaultValue(columnDefault);
         fieldInfo.setRemarks(columnRemarks);
-        if (columnName.startsWith("is_")) {
-            columnName = columnName.substring(3);
-        }
+//        if (columnName.startsWith("is_")) {
+//            columnName = columnName.substring(3);
+//        }
         String name = UtilHump.lineToHump(columnName, false, false);
         fieldInfo.setName(name);
         fieldInfo.setType(UtilType.getJavaType(columnType));
