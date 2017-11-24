@@ -48,9 +48,11 @@ var SysOrg = {
                 },
                 success: function (data) {
                     var data = eval('(' + data + ')');
-                    if (data.code == 200) {
+                    if (checkResp(data)) {
                         SysOrg.input.close();
                         SysOrg.list.reload();
+                    }else {
+                        errorAlert(data.message);
                     }
                 }
             });
