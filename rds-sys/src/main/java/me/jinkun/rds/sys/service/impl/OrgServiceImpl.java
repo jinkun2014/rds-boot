@@ -93,16 +93,15 @@ public class OrgServiceImpl implements IOrgService {
         List<Tree> childList =
                 allTreeList.stream()
                         .filter(tree -> tree.getPid() != null && tree.getPid().equals(id))
+                        .map(tree -> {
+                            if (tree.isLeaf()) {
+                                // 把子菜单的子菜单再循环一遍
+                                tree.setChildren(prepareTreeChiled(tree.getId(), allTreeList));
+                            }
+                            return tree;
+                        })
                         .collect(Collectors.toList());
 
-        childList.stream().map(tree -> {
-            if (tree.isLeaf()) {
-                // 把子菜单的子菜单再循环一遍
-                allTreeList.removeAll(childList);
-                tree.setChildren(prepareTreeChiled(tree.getId(), allTreeList));
-            }
-            return tree;
-        });
         // 递归退出条件
         if (Objects.isNull(childList) || childList.isEmpty()) {
             return null;
