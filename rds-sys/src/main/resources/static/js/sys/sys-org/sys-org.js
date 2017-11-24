@@ -8,25 +8,25 @@ var parentOrg;//上级部门
 var SysOrg = {
     URL: {
         inputUI: function () {
-            return ctx + "/sys/orgs/ui/input.html";
+            return ctx + "/sys/org/ui/input.html";
         },
         listUI: function () {
-            return ctx + "/sys/orgs/ui/list.html";
+            return ctx + "/sys/org/ui/list.html";
         },
         list: function () {
-            return ctx + "/sys/orgs/";
+            return ctx + "/sys/org/list";
         },
         tree: function () {
-            return ctx + "/sys/orgs/tree";
+            return ctx + "/sys/org/tree";
         },
         save: function () {
-            return ctx + "/sys/orgs/save";
+            return ctx + "/sys/org/save";
         },
         delete: function () {
-            return ctx + "/sys/orgs/delete";
+            return ctx + "/sys/org/delete";
         },
         get: function (id) {
-            return ctx + "/sys/orgs/" + id;
+            return ctx + "/sys/org/" + id;
         }
     },
     input: {
@@ -127,23 +127,19 @@ var SysOrg = {
                 },
                 //替换分页请求参数
                 onBeforeLoad: function (row, params) {
-                    params.page = params.page
-                    params.size = params.rows
+                    params.pageNo = params.page;
+                    params.pageSize = params.rows;
                     delete params.rows
                 },
                 loadFilter: function (data) {
-                    if (data.code == 200) {
-                        //将格式转换为TreeGrid需要的数据格式
-                        if (data.data) {
-                            var jsonStr = JSON.stringify(data.data); //可以将json对象转换成json字符串
-                            jsonStr = jsonStr.replace(new RegExp("pid", "gm"), "_parentId");
-                            jsonStr = jsonStr.replace(new RegExp("result", "gm"), "rows");
-                            return JSON.parse(jsonStr); //可以将json字符串转换成json对象
-                        }
-                    } else {
-                        dealException(data);
-                        return
+                    //将格式转换为TreeGrid需要的数据格式
+                    if (checkResp(data)) {
+                        var jsonStr = JSON.stringify({total: data.data.total, rows: data.data.list}); //可以将json对象转换成json字符串
+                        jsonStr = jsonStr.replace(new RegExp("pid", "gm"), "_parentId");
+                        jsonStr = jsonStr.replace(new RegExp("result", "gm"), "rows");
+                        return JSON.parse(jsonStr); //可以将json字符串转换成json对象
                     }
+                    errorAlert(data.message);
                 }
             });
         },
@@ -185,7 +181,7 @@ var SysOrg = {
                         method: 'get',
                         panelHeight: 'auto',
                         loadFilter: function (data, parent) {
-                            if (data.code == 200) {
+                            if (checkResp(data)) {
                                 return data.data;
                             }
                         }
@@ -236,14 +232,14 @@ var SysOrg = {
                         type: "GET",
                         url: SysOrg.URL.get(sels[0].id),
                         success: function (data) {
-                            if (data.code == 200) {
+                            if (checkResp(data)) {
                                 SysOrgForm.form("load", data.data);
                                 parentOrg.combotree({
                                     url: SysOrg.URL.tree(),
                                     method: 'get',
                                     panelHeight: 'auto',
                                     loadFilter: function (data, parent) {
-                                        if (data.code == 200) {
+                                        if (checkResp(data)) {
                                             return data.data;
                                         }
                                     },
@@ -251,6 +247,8 @@ var SysOrg = {
                                         parentOrg.combotree('setValue', data.data.pid);
                                     }
                                 });
+                            } else {
+                                errorAlert(data.message);
                             }
                         }
                     });
@@ -275,10 +273,13 @@ var SysOrg = {
                             type: "POST",
                             url: SysOrg.URL.delete(),
                             data: {ids: ids},
-                            success: function () {
-                                SysOrg.list.reload();
-                                //如果不清空，删除还可以编辑BUG
-                                SysOrg.list.clearSelectionsAndChecked();
+                            success: function (data) {
+                                if (checkResp(data)) {
+                                    SysOrg.list.reload();
+                                    //如果不清空，删除还可以编辑BUG
+                                    SysOrg.list.clearSelectionsAndChecked();
+                                }
+                                errorAlert(data.message);
                             }
                         });
                     }

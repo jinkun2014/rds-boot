@@ -31,7 +31,7 @@ function dealException(result) {
     });
 }
 
-function checkData(data) {
+function checkResp(data) {
     if (data && data.resultCode == "SUCCESS") {
         return true;
     }

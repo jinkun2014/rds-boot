@@ -46,7 +46,7 @@ var SysIcon = {
                 },
                 success: function (data) {
                     var data = eval('(' + data + ')');
-                    if (checkData(data)) {
+                    if (checkResp(data)) {
                         SysIcon.input.close();
                         SysIcon.list.reload();
                     }
@@ -126,9 +126,9 @@ var SysIcon = {
                 },
                 loadFilter: function (data) {
                     //{ "data":{ "list":[ ], "totalRecordCount":102 }, "message":"操作成功！", "resultCode":"SUCCESS" }
-                    if (checkData(data)) {
+                    if (checkResp(data)) {
                         //返回结果进行封装
-                        return {total: data.data.totalRecordCount, rows: data.data.list};
+                        return {total: data.data.total, rows: data.data.list};
                     }
                     //其它情况
                     errorAlert(data.message);
@@ -211,7 +211,7 @@ var SysIcon = {
                         type: "GET",
                         url: SysIcon.URL.get(sels[0].id),
                         success: function (data) {
-                            if (checkData(data)) {
+                            if (checkResp(data)) {
                                 SysIconForm.form("load", data.data);
                             } else {
                                 errorAlert(data.message);
@@ -299,7 +299,7 @@ var SysIcon = {
                             type: "get",
                             url: SysIcon.URL.load(),
                             success: function (data) {
-                                if (checkData(data)) {
+                                if (checkResp(data)) {
                                     SysIcon.list.reload();
                                 } else {
                                     errorAlert(data.message);

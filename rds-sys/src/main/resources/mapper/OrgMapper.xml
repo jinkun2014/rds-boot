@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.jinkun.rds.sys.mapper.IOrgMapper">
+
+    <!--配置了autoMapping=true,其他的无需配置，将会自动映射-->
+    <resultMap id="orgResultMap" type="me.jinkun.rds.sys.entity.Org" autoMapping="true"/>
+
+    <!--公共sql，其他Mapper可以调用-->
+    <sql id="commonFieldSql">
+        <choose>
+            <when test="fields == null or fields.size() == 0">*</when>
+            <otherwise>
+                <foreach collection="fields" separator="," item="field">${field}</foreach>
+            </otherwise>
+        </choose>
+    </sql>
+
+    <sql id="commonIdsSql">
+        <foreach collection="ids" open="WHERE id IN(" item="id" separator="," close=")">#{id}</foreach>
+    </sql>
+
+    <sql id="selectOrgSql">
+        <where>
+            <choose>
+                <when test="org==null"></when>
+                <otherwise>
+                    <if test="org.id!=null">AND id=#{org.id}</if>
+                    <if test="org.name!=null">AND name=#{org.name}</if>
+                    <if test="org.address!=null">AND address=#{org.address}</if>
+                    <if test="org.code!=null">AND code=#{org.code}</if>
+                    <if test="org.icon!=null">AND icon=#{org.icon}</if>
+                    <if test="org.pid!=null">AND pid=#{org.pid}</if>
+                    <if test="org.isLeaf!=null">AND is_leaf=#{org.isLeaf}</if>
+                    <if test="org.seq!=null">AND seq=#{org.seq}</if>
+                    <if test="org.delFlag!=null">AND del_flag=#{org.delFlag}</if>
+                    <if test="org.updateTime!=null">AND update_time=#{org.updateTime}</if>
+                    <if test="org.createTime!=null">AND create_time=#{org.createTime}</if>
+                </otherwise>
+            </choose>
+        </where>
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="org.id">
+        INSERT INTO sys_org
+        (
+        id,
+        name,
+        address,
+        code,
+        icon,
+        pid,
+        is_leaf,
+        seq,
+        del_flag,
+        update_time,
+        create_time
+        )
+        VALUES
+        (
+        #{org.id},
+        #{org.name},
+        #{org.address},
+        #{org.code},
+        #{org.icon},
+        #{org.pid},
+        #{org.isLeaf},
+        #{org.seq},
+        #{org.delFlag},
+        #{org.updateTime},
+        #{org.createTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE sys_org
+        <set>
+            <if test="org.name != null">
+            name = #{org.name},
+            </if>
+            <if test="org.address != null">
+            address = #{org.address},
+            </if>
+            <if test="org.code != null">
+            code = #{org.code},
+            </if>
+            <if test="org.icon != null">
+            icon = #{org.icon},
+            </if>
+            <if test="org.pid != null">
+            pid = #{org.pid},
+            </if>
+            <if test="org.isLeaf != null">
+            is_leaf = #{org.isLeaf},
+            </if>
+            <if test="org.seq != null">
+            seq = #{org.seq},
+            </if>
+            <if test="org.delFlag != null">
+            del_flag = #{org.delFlag},
+            </if>
+            <if test="org.updateTime != null">
+            update_time = #{org.updateTime},
+            </if>
+            <if test="org.createTime != null">
+            create_time = #{org.createTime}
+            </if>
+        </set>
+        WHERE id = #{org.id}
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM sys_org
+        <include refid="selectOrgSql"/>
+    </delete>
+
+    <delete id="deleteByIds">
+        DELETE
+        FROM sys_org
+        <include refid="commonIdsSql"/>
+    </delete>
+
+    <select id="loadCount" resultType="int">
+        SELECT COUNT(id)
+        FROM sys_org
+        <include refid="selectOrgSql"/>
+    </select>
+
+    <select id="loadByPK" resultMap="orgResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_org
+        WHERE id = #{id}
+    </select>
+
+    <select id="loads" resultMap="orgResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_org
+        <include refid="selectOrgSql"/>
+    </select>
+
+</mapper>

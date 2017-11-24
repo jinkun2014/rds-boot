@@ -18,8 +18,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class PageController extends CommonController {
 
     @RequestMapping(value = "/sys/icon/ui/{ui}.html", method = RequestMethod.GET)
-    public String ui(@PathVariable("ui") String ui) {
+    public String icon(@PathVariable("ui") String ui) {
         return "sys/sys-icon/sys-icon-" + ui;
+    }
+
+    @RequestMapping(value = "/sys/org/ui/{ui}.html", method = RequestMethod.GET)
+    public String org(@PathVariable("ui") String ui) {
+        return "sys/sys-org/sys-org-" + ui;
     }
 
 }
