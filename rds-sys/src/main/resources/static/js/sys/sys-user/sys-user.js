@@ -28,7 +28,7 @@ var SysUser = {
             return ctx + "/sys/users/" + id;
         },
         orgTree: function () {
-            return ctx + "/sys/orgs/tree";
+            return ctx + "/sys/org/tree";
         },
         roleListAll: function () {
             return ctx + "/sys/roles/all";
@@ -110,7 +110,7 @@ var SysUser = {
                 method: 'get',
                 url: SysUser.URL.orgTree(),
                 loadFilter: function (data, parent) {
-                    if (data.code == 200) {
+                    if (checkResp(data)) {
                         return data.data;
                     }
                 },
@@ -119,7 +119,7 @@ var SysUser = {
                         SysUserList.datagrid({
                             queryParams: {
                                 orgId: node.id
-                            },
+                            }
                         });
                     }
                 }

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.jinkun.rds.sys.mapper.IResourceMapper">
+
+    <!--配置了autoMapping=true,其他的无需配置，将会自动映射-->
+    <resultMap id="resourceResultMap" type="me.jinkun.rds.sys.entity.Resource" autoMapping="true"/>
+
+    <!--公共sql，其他Mapper可以调用-->
+    <sql id="commonFieldSql">
+        <choose>
+            <when test="fields == null or fields.size() == 0">*</when>
+            <otherwise>
+                <foreach collection="fields" separator="," item="field">${field}</foreach>
+            </otherwise>
+        </choose>
+    </sql>
+
+    <sql id="commonIdsSql">
+        <foreach collection="ids" open="WHERE id IN(" item="id" separator="," close=")">#{id}</foreach>
+    </sql>
+
+    <sql id="selectResourceSql">
+        <where>
+            <choose>
+                <when test="resource==null"></when>
+                <otherwise>
+                    <if test="resource.id!=null">AND id=#{resource.id}</if>
+                    <if test="resource.name!=null">AND name=#{resource.name}</if>
+                    <if test="resource.url!=null">AND url=#{resource.url}</if>
+                    <if test="resource.openMode!=null">AND open_mode=#{resource.openMode}</if>
+                    <if test="resource.description!=null">AND description=#{resource.description}</if>
+                    <if test="resource.icon!=null">AND icon=#{resource.icon}</if>
+                    <if test="resource.pid!=null">AND pid=#{resource.pid}</if>
+                    <if test="resource.seq!=null">AND seq=#{resource.seq}</if>
+                    <if test="resource.status!=null">AND status=#{resource.status}</if>
+                    <if test="resource.resourceType!=null">AND resource_type=#{resource.resourceType}</if>
+                    <if test="resource.isLeaf!=null">AND is_leaf=#{resource.isLeaf}</if>
+                    <if test="resource.delFlag!=null">AND del_flag=#{resource.delFlag}</if>
+                    <if test="resource.updateTime!=null">AND update_time=#{resource.updateTime}</if>
+                    <if test="resource.createTime!=null">AND create_time=#{resource.createTime}</if>
+                </otherwise>
+            </choose>
+        </where>
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="resource.id">
+        INSERT INTO sys_resource
+        (
+        id,
+        name,
+        url,
+        open_mode,
+        description,
+        icon,
+        pid,
+        seq,
+        status,
+        resource_type,
+        is_leaf,
+        del_flag,
+        update_time,
+        create_time
+        )
+        VALUES
+        (
+        #{resource.id},
+        #{resource.name},
+        #{resource.url},
+        #{resource.openMode},
+        #{resource.description},
+        #{resource.icon},
+        #{resource.pid},
+        #{resource.seq},
+        #{resource.status},
+        #{resource.resourceType},
+        #{resource.isLeaf},
+        #{resource.delFlag},
+        #{resource.updateTime},
+        #{resource.createTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE sys_resource
+        <set>
+            <if test="resource.name != null">
+            name = #{resource.name},
+            </if>
+            <if test="resource.url != null">
+            url = #{resource.url},
+            </if>
+            <if test="resource.openMode != null">
+            open_mode = #{resource.openMode},
+            </if>
+            <if test="resource.description != null">
+            description = #{resource.description},
+            </if>
+            <if test="resource.icon != null">
+            icon = #{resource.icon},
+            </if>
+            <if test="resource.pid != null">
+            pid = #{resource.pid},
+            </if>
+            <if test="resource.seq != null">
+            seq = #{resource.seq},
+            </if>
+            <if test="resource.status != null">
+            status = #{resource.status},
+            </if>
+            <if test="resource.resourceType != null">
+            resource_type = #{resource.resourceType},
+            </if>
+            <if test="resource.isLeaf != null">
+            is_leaf = #{resource.isLeaf},
+            </if>
+            <if test="resource.delFlag != null">
+            del_flag = #{resource.delFlag},
+            </if>
+            <if test="resource.updateTime != null">
+            update_time = #{resource.updateTime},
+            </if>
+            <if test="resource.createTime != null">
+            create_time = #{resource.createTime}
+            </if>
+        </set>
+        WHERE id = #{resource.id}
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM sys_resource
+        <include refid="selectResourceSql"/>
+    </delete>
+
+    <delete id="deleteByIds">
+        DELETE
+        FROM sys_resource
+        <include refid="commonIdsSql"/>
+    </delete>
+
+    <select id="loadCount" resultType="int">
+        SELECT COUNT(id)
+        FROM sys_resource
+        <include refid="selectResourceSql"/>
+    </select>
+
+    <select id="loadByPK" resultMap="resourceResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_resource
+        WHERE id = #{id}
+    </select>
+
+    <select id="loads" resultMap="resourceResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_resource
+        <include refid="selectResourceSql"/>
+    </select>
+
+</mapper>

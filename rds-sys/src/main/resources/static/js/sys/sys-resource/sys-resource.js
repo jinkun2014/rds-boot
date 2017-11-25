@@ -9,28 +9,28 @@ var iconText;//图片输入框
 var SysResource = {
     URL: {
         inputUI: function () {
-            return ctx + "/sys/resources/ui/input.html";
+            return ctx + "/sys/resource/ui/input.html";
         },
         listUI: function () {
-            return ctx + "/sys/resources/ui/list.html";
+            return ctx + "/sys/resource/ui/list.html";
         },
         iconUI: function () {
-            return ctx + "/sys/resources/ui/icon.html";
+            return ctx + "/sys/resource/ui/icon.html";
         },
         list: function () {
-            return ctx + "/sys/resources/";
+            return ctx + "/sys/resource/list";
         },
         save: function () {
-            return ctx + "/sys/resources/save";
+            return ctx + "/sys/resource/save";
         },
         delete: function () {
-            return ctx + "/sys/resources/delete";
+            return ctx + "/sys/resource/delete";
         },
         get: function (id) {
-            return ctx + "/sys/resources/" + id;
+            return ctx + "/sys/resource/" + id;
         },
         tree: function () {
-            return ctx + "/sys/resources/tree";
+            return ctx + "/sys/resource/tree";
         }
     },
     input: {
@@ -53,7 +53,7 @@ var SysResource = {
                 },
                 success: function (data) {
                     var data = eval('(' + data + ')');
-                    if (data.code == 200) {
+                    if (checkResp(data)) {
                         SysResource.input.close();
                         SysResource.list.reload();
                     }
@@ -186,19 +186,17 @@ var SysResource = {
                 },
                 //替换分页请求参数
                 onBeforeLoad: function (row, params) {
-                    params.page = params.page
-                    params.size = params.rows
+                    params.pageNo = params.page;
+                    params.pageSize = params.rows;
                     delete params.rows
                 },
                 loadFilter: function (data) {
                     //将格式转换为TreeGrid需要的数据格式
-                    if (data.data) {
-                        var jsonStr = JSON.stringify(data.data); //可以将json对象转换成json字符串
+                    if (checkResp(data)) {
+                        var jsonStr = JSON.stringify({total:data.data.total,rows:data.data.list}); //可以将json对象转换成json字符串
                         jsonStr = jsonStr.replace(new RegExp("pid", "gm"), "_parentId");
                         jsonStr = jsonStr.replace(new RegExp("result", "gm"), "rows");
                         return JSON.parse(jsonStr); //可以将json字符串转换成json对象
-                    } else {
-                        return data;
                     }
                 }
             });
@@ -241,7 +239,7 @@ var SysResource = {
                         method: 'get',
                         panelHeight: 'auto',
                         loadFilter: function (data, parent) {
-                            if (data.code == 200) {
+                            if (checkResp(data)) {
                                 return data.data;
                             }
                         }
@@ -292,7 +290,7 @@ var SysResource = {
                         type: "GET",
                         url: SysResource.URL.get(sels[0].id),
                         success: function (data) {
-                            if (data.code == 200) {
+                            if (checkResp(data)) {
                                 SysResourceForm.form("load", data.data);
 
                                 //上级资源
@@ -301,7 +299,7 @@ var SysResource = {
                                     method: 'get',
                                     panelHeight: 'auto',
                                     loadFilter: function (data, parent) {
-                                        if (data.code == 200) {
+                                        if (checkResp(data)) {
                                             return data.data;
                                         }
                                     },
@@ -333,10 +331,12 @@ var SysResource = {
                             type: "POST",
                             url: SysResource.URL.delete(),
                             data:{ids:ids},
-                            success: function () {
-                                SysResource.list.reload();
-                                //如果不清空，删除还可以编辑BUG
-                                SysResource.list.clearSelectionsAndChecked();
+                            success: function (data) {
+                                if (checkResp(data)){
+                                    SysResource.list.reload();
+                                    //如果不清空，删除还可以编辑BUG
+                                    SysResource.list.clearSelectionsAndChecked();
+                                }
                             }
                         });
                     }

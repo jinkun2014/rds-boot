@@ -27,4 +27,9 @@ public class PageController extends CommonController {
         return "sys/sys-org/sys-org-" + ui;
     }
 
+    @RequestMapping(value = "/sys/resource/ui/{ui}.html", method = RequestMethod.GET)
+    public String resource(@PathVariable("ui") String ui) {
+        return "sys/sys-resource/sys-resource-" + ui;
+    }
+
 }
