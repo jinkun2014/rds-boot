@@ -76,9 +76,7 @@ public class ${EntityInfo.entityName}Controller extends CommonController {
                        @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
                        ${EntityInfo.entityName} ${EntityInfo.entityName ? uncap_first }) {
         int totalRecordCount = ${EntityInfo.serviceName ? uncap_first }.loadCount(${EntityInfo.entityName ? uncap_first });
-        IPage page = new SimplePage(pageNo, pageSize);
-        Set<ISort> sortSet = Sets.newHashSet(new Sorter("id", false));
-        List<${EntityInfo.entityName}> ${EntityInfo.entityName ? uncap_first }List = totalRecordCount == 0 ? Collections.EMPTY_LIST : ${EntityInfo.serviceName ? uncap_first }.loads(${EntityInfo.entityName ? uncap_first },null, sortSet, page);
+        List<${EntityInfo.entityName}> ${EntityInfo.entityName ? uncap_first }List = totalRecordCount == 0 ? Collections.EMPTY_LIST : ${EntityInfo.serviceName ? uncap_first }.loads(${EntityInfo.entityName ? uncap_first },null, Sets.newHashSet(new Sorter("id", false)), new SimplePage(pageNo, pageSize));
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("total", totalRecordCount);
         resultMap.put("list", ${EntityInfo.entityName ? uncap_first }List);
