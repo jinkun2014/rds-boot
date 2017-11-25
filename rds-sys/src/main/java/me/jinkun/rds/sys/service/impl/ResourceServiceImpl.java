@@ -48,11 +48,19 @@ public class ResourceServiceImpl implements IResourceService {
     }
 
     public boolean saveOrUpdate(Resource resource) {
+        int count=0;
         boolean save = Objects.isNull(resource.getId());
         if (save) {
-            return iResourceMapper.insert(resource) > 0;
+            count = iResourceMapper.insert(resource);
         }
-        return iResourceMapper.update(resource) > 0;
+        count = iResourceMapper.update(resource);
+        //更新父机构状态
+        if (count > 0 && Objects.nonNull(resource.getPid())) {
+            Resource parent = iResourceMapper.loadByPK(resource.getPid(), Sets.newHashSet("is_leaf"));
+            parent.setIsLeaf(false);
+            iResourceMapper.update(resource);
+        }
+        return count > 0;
     }
 
     public boolean deleteByIds(Set<Long> ids) {

@@ -48,7 +48,7 @@ public class OrgServiceImpl implements IOrgService {
     }
 
     public boolean saveOrUpdate(Org org) {
-        int count = 0;
+        int count=0;
         boolean save = Objects.isNull(org.getId());
         if (save) {
             count = iOrgMapper.insert(org);
