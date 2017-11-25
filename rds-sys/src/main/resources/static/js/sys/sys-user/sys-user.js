@@ -10,22 +10,22 @@ var SysUserRole;//角色构架树
 var SysUser = {
     URL: {
         inputUI: function () {
-            return ctx + "/sys/users/ui/input.html";
+            return ctx + "/sys/user/ui/input.html";
         },
         listUI: function () {
-            return ctx + "/sys/users/ui/list.html";
+            return ctx + "/sys/user/ui/list.html";
         },
         list: function () {
-            return ctx + "/sys/users/";
+            return ctx + "/sys/user/list";
         },
         save: function () {
-            return ctx + "/sys/users/save";
+            return ctx + "/sys/user/save";
         },
         delete: function () {
-            return ctx + "/sys/users/delete";
+            return ctx + "/sys/user/delete";
         },
         get: function (id) {
-            return ctx + "/sys/users/" + id;
+            return ctx + "/sys/user/" + id;
         },
         orgTree: function () {
             return ctx + "/sys/org/tree";
@@ -54,7 +54,7 @@ var SysUser = {
                 },
                 success: function (data) {
                     var data = eval('(' + data + ')');
-                    if (data.code == 200) {
+                    if (checkResp(data)) {
                         SysUser.input.close();
                         SysUser.list.reload();
                     }
@@ -179,14 +179,14 @@ var SysUser = {
                 },
                 //替换分页请求参数
                 onBeforeLoad: function (params) {
-                    params.page = params.page
-                    params.size = params.rows
+                    params.pageNo = params.page;
+                    params.pageSize = params.rows;
                     delete params.rows
                 },
                 loadFilter: function (data) {
-                    if (data.data) {
+                    if (checkResp(data)) {
                         //返回结果进行封装
-                        return {total: data.data.total, rows: data.data.result};
+                        return {total: data.data.total, rows: data.data.list};
                     } else {
                         return data;
                     }
@@ -225,13 +225,13 @@ var SysUser = {
                     $("#dialog").dialog('destroy');
                 },
                 onLoad: function () {
-                    //组织信息
+                    //组织信息 虽然数据库设计是多个组织，但目前前端只实现单选
                     SysUserOrg.combotree({
                         url: SysUser.URL.orgTree(),
                         method: 'get',
                         panelHeight: 'auto',
                         loadFilter: function (data, parent) {
-                            if (data.code == 200) {
+                            if (checkResp(data)) {
                                 return data.data;
                             }
                         },
@@ -254,7 +254,7 @@ var SysUser = {
                         method: 'get',
                         panelHeight: 'auto',
                         loadFilter: function (data, parent) {
-                            if (data.code == 200) {
+                            if (checkResp(data)) {
                                 return data.data;
                             }
                         }
@@ -305,7 +305,7 @@ var SysUser = {
                         type: "GET",
                         url: SysUser.URL.get(sels[0].id),
                         success: function (data) {
-                            if (data.code == 200) {
+                            if (checkResp(data)) {
                                 SysUserForm.form("load", data.data);
 
                                 //组织信息
@@ -314,12 +314,12 @@ var SysUser = {
                                     method: 'get',
                                     panelHeight: 'auto',
                                     loadFilter: function (data, parent) {
-                                        if (data.code == 200) {
+                                        if (checkResp(data)) {
                                             return data.data;
                                         }
                                     },
                                     onLoadSuccess: function () {
-                                        SysUserOrg.combotree('setValue', data.data.orgId);
+                                        SysUserOrg.combotree('setValue', data.data.orgIds);
                                     },
                                     //选择树节点触发事件
                                     onSelect: function (node) {
@@ -340,7 +340,7 @@ var SysUser = {
                                     method: 'get',
                                     panelHeight: 'auto',
                                     loadFilter: function (data, parent) {
-                                        if (data.code == 200) {
+                                        if (checkResp(data)) {
                                             return data.data;
                                         }
                                     },
@@ -373,9 +373,11 @@ var SysUser = {
                             url: SysUser.URL.delete(),
                             data:{ids:ids},
                             success: function () {
-                                SysUser.list.reload();
-                                //如果不清空，删除还可以编辑BUG
-                                SysUser.list.clearSelectionsAndChecked();
+                                if(checkResp(data)){
+                                    SysUser.list.reload();
+                                    //如果不清空，删除还可以编辑BUG
+                                    SysUser.list.clearSelectionsAndChecked();
+                                }
                             }
                         });
                     }

@@ -32,4 +32,9 @@ public class PageController extends CommonController {
         return "sys/sys-resource/sys-resource-" + ui;
     }
 
+    @RequestMapping(value = "/sys/user/ui/{ui}.html", method = RequestMethod.GET)
+    public String user(@PathVariable("ui") String ui) {
+        return "sys/sys-user/sys-user-" + ui;
+    }
+
 }

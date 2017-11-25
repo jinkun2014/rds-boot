@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.jinkun.rds.sys.mapper.IUserOrgMapper">
+
+    <!--配置了autoMapping=true,其他的无需配置，将会自动映射-->
+    <resultMap id="userOrgResultMap" type="me.jinkun.rds.sys.entity.UserOrg" autoMapping="true"/>
+
+    <!--公共sql，其他Mapper可以调用-->
+    <sql id="commonFieldSql">
+        <choose>
+            <when test="fields == null or fields.size() == 0">*</when>
+            <otherwise>
+                <foreach collection="fields" separator="," item="field">${field}</foreach>
+            </otherwise>
+        </choose>
+    </sql>
+
+    <sql id="commonIdsSql">
+        <foreach collection="ids" open="WHERE id IN(" item="id" separator="," close=")">#{id}</foreach>
+    </sql>
+
+    <sql id="selectUserOrgSql">
+        <where>
+            <choose>
+                <when test="userOrg==null"></when>
+                <otherwise>
+                    <if test="userOrg.id!=null">AND id=#{userOrg.id}</if>
+                    <if test="userOrg.userId!=null">AND user_id=#{userOrg.userId}</if>
+                    <if test="userOrg.orgId!=null">AND org_id=#{userOrg.orgId}</if>
+                </otherwise>
+            </choose>
+        </where>
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="userOrg.id">
+        INSERT INTO sys_user_org
+        (
+        id,
+        user_id,
+        org_id
+        )
+        VALUES
+        (
+        #{userOrg.id},
+        #{userOrg.userId},
+        #{userOrg.orgId}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE sys_user_org
+        <set>
+            <if test="userOrg.userId != null">
+                user_id = #{userOrg.userId},
+            </if>
+            <if test="userOrg.orgId != null">
+                org_id = #{userOrg.orgId}
+            </if>
+        </set>
+        WHERE id = #{userOrg.id}
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM sys_user_org
+        <include refid="selectUserOrgSql"/>
+    </delete>
+
+    <delete id="deleteByIds">
+        DELETE
+        FROM sys_user_org
+        <include refid="commonIdsSql"/>
+    </delete>
+
+    <select id="loadCount" resultType="int">
+        SELECT COUNT(id)
+        FROM sys_user_org
+        <include refid="selectUserOrgSql"/>
+    </select>
+
+    <select id="loadByPK" resultMap="userOrgResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_user_org
+        WHERE id = #{id}
+    </select>
+
+    <select id="loads" resultMap="userOrgResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_user_org
+        <include refid="selectUserOrgSql"/>
+    </select>
+
+    <!-- 查询用户ids -->
+    <select id="loadsUserId" resultType="long">
+        SELECT
+        DISTINCT(user_id)
+        FROM sys_user_org
+        <include refid="selectUserOrgSql"/>
+    </select>
+
+    <!-- 查询组织ids -->
+    <select id="loadsOrgId" resultType="long">
+        SELECT
+        DISTINCT(org_id)
+        FROM sys_user_org
+        <include refid="selectUserOrgSql"/>
+    </select>
+
+
+    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="userOrg.id">
+        INSERT INTO sys_user_org
+        (
+        id,
+        user_id,
+        org_id
+        )
+        VALUES
+        <foreach collection="orgIds"  item="orgId" separator=",">
+            (null,#{userId}, #orgId)
+        </foreach>
+    </insert>
+
+</mapper>

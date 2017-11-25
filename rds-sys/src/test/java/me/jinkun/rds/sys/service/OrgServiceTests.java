@@ -26,8 +26,8 @@ public class OrgServiceTests {
     @Test
     public void list() {
         Org org = new Org();
-        org.setDelFlag(false);
-        List<Org> orgList = iOrgService.loads(org, null, Sets.newHashSet(new Sorter("seq", true)), null);
+        //org.setDelFlag(false);
+        List<Org> orgList = iOrgService.loads(null, null, Sets.newHashSet(new Sorter("seq", true)), null);
         System.out.println(orgList);
     }
 }

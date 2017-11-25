@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.jinkun.rds.sys.mapper.IUserMapper">
+
+    <!--配置了autoMapping=true,其他的无需配置，将会自动映射-->
+    <resultMap id="userResultMap" type="me.jinkun.rds.sys.entity.User" autoMapping="true"/>
+
+    <!--公共sql，其他Mapper可以调用-->
+    <sql id="commonFieldSql">
+        <choose>
+            <when test="fields == null or fields.size() == 0">*</when>
+            <otherwise>
+                <foreach collection="fields" separator="," item="field">${field}</foreach>
+            </otherwise>
+        </choose>
+    </sql>
+
+    <sql id="commonIdsSql">
+        <foreach collection="ids" open="WHERE id IN(" item="id" separator="," close=")">#{id}</foreach>
+    </sql>
+
+    <sql id="selectUserSql">
+        <where>
+            <choose>
+                <when test="user==null">AND 1=1</when>
+                <otherwise>
+                    AND 1=1
+                    <if test="user.id!=null">AND id=#{user.id}</if>
+                    <if test="user.loginName!=null">AND login_name=#{user.loginName}</if>
+                    <if test="user.name!=null">AND name=#{user.name}</if>
+                    <if test="user.password!=null">AND password=#{user.password}</if>
+                    <if test="user.sex!=null">AND sex=#{user.sex}</if>
+                    <if test="user.age!=null">AND age=#{user.age}</if>
+                    <if test="user.phone!=null">AND phone=#{user.phone}</if>
+                    <if test="user.userType!=null">AND user_type=#{user.userType}</if>
+                    <if test="user.status!=null">AND status=#{user.status}</if>
+                    <if test="user.delFlag!=null">AND del_flag=#{user.delFlag}</if>
+                    <if test="user.updateTime!=null">AND update_time=#{user.updateTime}</if>
+                    <if test="user.createTime!=null">AND create_time=#{user.createTime}</if>
+                </otherwise>
+            </choose>
+        </where>
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="user.id">
+        INSERT INTO sys_user
+        (
+        id,
+        login_name,
+        name,
+        password,
+        sex,
+        age,
+        phone,
+        user_type,
+        status,
+        del_flag,
+        update_time,
+        create_time
+        )
+        VALUES
+        (
+        #{user.id},
+        #{user.loginName},
+        #{user.name},
+        #{user.password},
+        #{user.sex},
+        #{user.age},
+        #{user.phone},
+        #{user.userType},
+        #{user.status},
+        #{user.delFlag},
+        #{user.updateTime},
+        #{user.createTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE sys_user
+        <set>
+            <if test="user.loginName != null">
+                login_name = #{user.loginName},
+            </if>
+            <if test="user.name != null">
+                name = #{user.name},
+            </if>
+            <if test="user.password != null">
+                password = #{user.password},
+            </if>
+            <if test="user.sex != null">
+                sex = #{user.sex},
+            </if>
+            <if test="user.age != null">
+                age = #{user.age},
+            </if>
+            <if test="user.phone != null">
+                phone = #{user.phone},
+            </if>
+            <if test="user.userType != null">
+                user_type = #{user.userType},
+            </if>
+            <if test="user.status != null">
+                status = #{user.status},
+            </if>
+            <if test="user.delFlag != null">
+                del_flag = #{user.delFlag},
+            </if>
+            <if test="user.updateTime != null">
+                update_time = #{user.updateTime},
+            </if>
+            <if test="user.createTime != null">
+                create_time = #{user.createTime}
+            </if>
+        </set>
+        WHERE id = #{user.id}
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM sys_user
+        <include refid="selectUserSql"/>
+    </delete>
+
+    <delete id="deleteByIds">
+        DELETE
+        FROM sys_user
+        <include refid="commonIdsSql"/>
+    </delete>
+
+    <select id="loadCount" resultType="int">
+        SELECT COUNT(id)
+        FROM sys_user
+        <include refid="selectUserSql"/>
+    </select>
+
+    <select id="loadByPK" resultMap="userResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_user
+        WHERE id = #{id}
+    </select>
+
+    <select id="loads" resultMap="userResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_user
+        <include refid="selectUserSql"/>
+    </select>
+
+    <!-- 扩展 -->
+    <select id="loadsByIds" resultMap="userResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_user
+        <include refid="commonIdsSql"/>
+    </select>
+
+</mapper>

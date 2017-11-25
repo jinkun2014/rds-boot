@@ -24,6 +24,7 @@
             <choose>
                 <when test="org==null"></when>
                 <otherwise>
+                    AND 1=1
                     <if test="org.id!=null">AND id=#{org.id}</if>
                     <if test="org.name!=null">AND name=#{org.name}</if>
                     <if test="org.address!=null">AND address=#{org.address}</if>
