@@ -100,18 +100,21 @@ var SysIcon = {
                 url: SysIcon.URL.list(),
                 method: 'get',
                 pagination: true,
-                pageSize: 20,
+                pageSize: 10,
                 fit: true,
                 toolbar: '#SysIconToolbar',//SysIcon.list.toolbar,
                 singleSelect: false,
                 collapsible: false,
                 striped: true,
+                rownumbers: true,
                 columns: [[
                     {field: 'ck', checkbox: true},
                     {field: 'id', title: '主键', hidden: true},
                     {field: 'name', title: '名称', width: '20%', hidden: false},
                     {field: 'url', title: '链接', width: '20%', hidden: false},
                     {field: 'type', title: '类型', width: '20%', hidden: false},
+                    {field: 'updateTime', title: '更新时间', width: '18%', hidden: false},
+                    {field: 'createTime', title: '创建时间', width: '18%', hidden: false}
                 ]],
                 //设置选中事件，清除之前的行选择
                 onClickRow: function (index, row) {

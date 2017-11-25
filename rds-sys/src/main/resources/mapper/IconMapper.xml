@@ -28,9 +28,9 @@
                     <if test="icon.name!=null">AND name=#{icon.name}</if>
                     <if test="icon.url!=null">AND url=#{icon.url}</if>
                     <if test="icon.type!=null">AND type=#{icon.type}</if>
-                    <if test="icon.delete!=null">AND is_delete=#{icon.delete}</if>
-                    <if test="icon.gmtUpdate!=null">AND gmt_update=#{icon.gmtUpdate}</if>
-                    <if test="icon.gmtCreate!=null">AND gmt_create=#{icon.gmtCreate}</if>
+                    <if test="icon.delMark!=null">AND del_mark=#{icon.delMark}</if>
+                    <if test="icon.updateTime!=null">AND update_time=#{icon.updateTime}</if>
+                    <if test="icon.createTime!=null">AND create_time=#{icon.createTime}</if>
                 </otherwise>
             </choose>
         </where>
@@ -43,9 +43,9 @@
         name,
         url,
         type,
-        is_delete,
-        gmt_update,
-        gmt_create
+        del_mark,
+        update_time,
+        create_time
         )
         VALUES
         (
@@ -53,9 +53,9 @@
         #{icon.name},
         #{icon.url},
         #{icon.type},
-        #{icon.delete},
-        #{icon.gmtUpdate},
-        #{icon.gmtCreate}
+        #{icon.delMark},
+        #{icon.updateTime},
+        #{icon.createTime}
         )
     </insert>
 
@@ -71,14 +71,14 @@
             <if test="icon.type != null">
             type = #{icon.type},
             </if>
-            <if test="icon.delete != null">
-            is_delete = #{icon.delete},
+            <if test="icon.delMark != null">
+            del_mark = #{icon.delMark},
             </if>
-            <if test="icon.gmtUpdate != null">
-            gmt_update = #{icon.gmtUpdate},
+            <if test="icon.updateTime != null">
+            update_time = #{icon.updateTime},
             </if>
-            <if test="icon.gmtCreate != null">
-            gmt_create = #{icon.gmtCreate}
+            <if test="icon.createTime != null">
+            create_time = #{icon.createTime}
             </if>
         </set>
         WHERE id = #{icon.id}

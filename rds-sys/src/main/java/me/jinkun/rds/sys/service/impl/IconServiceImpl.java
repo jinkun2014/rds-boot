@@ -66,9 +66,9 @@ public class IconServiceImpl implements IIconService {
                 icon.setName(name);
                 icon.setType("32x32");
                 icon.setUrl("/images/32x32/" + name);
-                icon.setDelete(false);
-                icon.setGmtCreate(now);
-                icon.setGmtUpdate(now);
+                icon.setDelMark(false);
+                icon.setUpdateTime(now);
+                icon.setCreateTime(now);
                 iIconMapper.insert(icon);
             }
         } catch (Exception e) {
