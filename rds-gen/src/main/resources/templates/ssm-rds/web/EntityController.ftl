@@ -8,7 +8,6 @@ import me.jinkun.rds.core.support.web.CommonController;
 import me.jinkun.rds.core.support.web.ResultCode;
 import ${EntityInfo.packageInfo.entity}.${EntityInfo.entityName};
 import ${EntityInfo.packageInfo.service}.${EntityInfo.serviceName};
-import cn.com.header.wjdc.web.CommonController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
