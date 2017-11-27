@@ -54,9 +54,9 @@ public class ResourceServiceImpl implements IResourceService {
         boolean save = Objects.isNull(resource.getId());
         boolean flag;
         if (save) {
-            flag = iResourceMapper.insert(resource)>0;
+            flag = iResourceMapper.insert(resource) > 0;
         }
-        flag = iResourceMapper.update(resource)>0;
+        flag = iResourceMapper.update(resource) > 0;
         //更新父机构状态
         if (flag && Objects.nonNull(resource.getPid())) {
             Resource parent = iResourceMapper.loadByPK(resource.getPid(), Sets.newHashSet("is_leaf"));
@@ -142,6 +142,11 @@ public class ResourceServiceImpl implements IResourceService {
         resource.setDelFlag(false);
         List<Resource> resourceList = iResourceMapper.loads(resource, null, Sets.newHashSet(new Sorter("seq", true)), null);
         return prepareTree(resourceList);
+    }
+
+    @Override
+    public List<Resource> getByUserIdAndPid(Long userId, Long pid) {
+        return iResourceMapper.getByUserIdAndPid(null, userId, pid);
     }
 
     private List<Tree> prepareTree(List<Resource> resourceList) {

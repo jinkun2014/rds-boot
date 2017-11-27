@@ -155,4 +155,16 @@
         <include refid="commonIdsSql"/>
     </select>
 
+    <select id="findByLoginNameAndPassword" resultMap="userResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_user
+        WHERE 1=1
+        <if test="loginName!=null and loginName!=''">
+            AND login_name=#{loginName}
+        </if>
+        <if test="password!=null and password!=''">
+            AND password=#{password}
+        </if>
+    </select>
 </mapper>

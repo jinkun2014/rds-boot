@@ -31,27 +31,6 @@ function dealException(result) {
     });
 }
 
-function checkResp(data) {
-    if (data && data.resultCode == "SUCCESS") {
-        return true;
-    }
-    return false;
-}
-
-/**
- * 错误提示框
- * @param result {"code":200,"msg":"发送位置错误"}
- */
-function errorAlert(msg) {
-    $.messager.alert({
-        title: '警告',
-        msg: msg,
-        fn: function () {
-
-        }
-    });
-}
-
 /**
  * 删除选项卡
  */
@@ -71,7 +50,7 @@ function logout() {
         type: "GET",
         url: "/logout",
         success: function (data) {
-            if (data.code == 200) {
+            if (checkResp(data)) {
                 window.location.href = "/login.html";
             }
         }
@@ -204,7 +183,7 @@ function onClickSecondMenu(id) {
         type: "GET",
         url: "/menu/" + id + "/children",
         success: function (data) {
-            if (data.code == 200) {
+            if (checkResp(data)) {
                 //加入缓存
                 thirdMenuCache['' + id] = data.data;
 
@@ -273,7 +252,7 @@ function onClickTopMenu(id) {
         type: "GET",
         url: "/menu/" + id + "/children",
         success: function (data) {
-            if (data.code == 200) {
+            if (checkResp(data)) {
                 //加入缓存
                 secondMenuCache['' + id] = data.data;
 
@@ -288,7 +267,7 @@ function initChats1() {
         type: "GET",
         url: "/sys/logs/pv",
         success: function (data) {
-            if (data.code == 200) {
+            if (checkResp(data)) {
                 // 基于准备好的dom，初始化echarts实例
                 var myChart = echarts.init(document.getElementById('main1'));
 
@@ -548,7 +527,7 @@ $(function () {
         type: 'GET',
         url: '/menu/-1/children',
         success: function (data) {
-            if (data.code == 200) {
+            if (checkResp(data)) {
                 //清空菜单
                 //$('#topMenu').empty();
 

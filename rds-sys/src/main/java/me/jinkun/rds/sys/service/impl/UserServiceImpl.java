@@ -133,4 +133,9 @@ public class UserServiceImpl implements IUserService {
         return true;
     }
 
+    @Override
+    public User findByLoginNameAndPassword(String loginName, String password) {
+        return iUserMapper.findByLoginNameAndPassword(null,loginName,password);
+    }
+
 }

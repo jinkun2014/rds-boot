@@ -158,4 +158,27 @@
         <include refid="selectResourceSql"/>
     </select>
 
+    <select id="getByUserIdAndPid" resultMap="resourceResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_resource
+        WHERE id IN
+        (
+            SELECT resource_id
+            FROM sys_role_resource
+            WHERE role_id IN
+            (
+                SELECT role_id
+                FROM sys_user_role
+                WHERE user_id=#{userId}
+            )
+        )
+        <if test="pid==null">
+            AND pid IS NULL
+        </if>
+        <if test="pid!=null">
+            AND pid=#{pid}
+        </if>
+    </select>
+
 </mapper>

@@ -62,4 +62,6 @@ public interface IResourceService {
     boolean deleteByIds(Set<Long> ids);
 
     List<Tree> listTree();
+
+    List<Resource> getByUserIdAndPid(Long id, Long pid);
 }

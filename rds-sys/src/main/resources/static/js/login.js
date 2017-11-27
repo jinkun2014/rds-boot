@@ -7,7 +7,7 @@ function login() {
         data: {loginName: loginName, password: password},
         dataType: 'json',
         success: function (data) {
-            if (data.code == 200) {
+            if (checkResp(data)) {
                 window.location.href = data.data;
             }
         }

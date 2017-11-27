@@ -92,4 +92,9 @@ public interface IUserMapper {
             @Param("sorts") Set<ISort> sortSet,
             @Param("page") IPage page
     );
+
+    User findByLoginNameAndPassword(
+            @Param("fields") Set<String> fields,
+            @Param("loginName") String loginName,
+            @Param("password") String password);
 }

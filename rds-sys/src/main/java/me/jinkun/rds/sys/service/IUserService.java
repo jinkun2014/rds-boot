@@ -99,4 +99,6 @@ public interface IUserService {
      * @return
      */
     boolean saveOrUpdate(UserExtend userExtend);
+
+    User findByLoginNameAndPassword(String loginName, String password);
 }
