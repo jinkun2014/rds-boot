@@ -59,7 +59,13 @@ public class UserServiceImpl implements IUserService {
     }
 
     public boolean deleteByIds(Set<Long> ids) {
-        return iUserMapper.deleteByIds(ids) > 0;
+        int count = iUserMapper.deleteByIds(ids);
+        boolean flag = count > 0;
+        if (flag) {
+            //删除中间表
+            iUserOrgMapper.deleteByUserIds(ids);
+        }
+        return flag;
     }
 
     @Override

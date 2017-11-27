@@ -112,4 +112,18 @@ public interface IUserOrgMapper {
             @Param("userId") Long userId,
             @Param("orgIds") Set<Long> orgIds
     );
+
+    /**
+     * 根据UserIds批量删除
+     *
+     * @param userIds
+     */
+    int deleteByUserIds(@Param("userIds") Set<Long> userIds);
+
+    /**
+     * 根据OrgIds批量删除
+     *
+     * @param orgIds
+     */
+    int deleteByOrgIds(@Param("orgIds") Set<Long> orgIds);
 }

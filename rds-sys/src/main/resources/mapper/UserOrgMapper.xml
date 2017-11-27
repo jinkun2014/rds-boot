@@ -121,4 +121,15 @@
         </foreach>
     </insert>
 
+    <delete id="deleteByUserIds">
+        DELETE
+        FROM sys_user_org
+        <foreach collection="userIds" open="WHERE user_id IN(" item="id" separator="," close=")">#{id}</foreach>
+    </delete>
+
+    <delete id="deleteByOrgIds">
+        DELETE
+        FROM sys_user_org
+        <foreach collection="orgIds" open="WHERE org_id IN(" item="id" separator="," close=")">#{id}</foreach>
+    </delete>
 </mapper>
