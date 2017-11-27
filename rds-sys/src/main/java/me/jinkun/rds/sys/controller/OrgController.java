@@ -75,6 +75,7 @@ public class OrgController extends CommonController {
     public Object list(@RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
                        @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
                        Org org) {
+        org.setDelFlag(false);
         int totalRecordCount = iOrgService.loadCount(org);
         IPage page = new SimplePage(pageNo, pageSize);
         Set<ISort> sortSet = Sets.newHashSet(new Sorter("seq", true));

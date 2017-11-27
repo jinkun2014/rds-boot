@@ -6,15 +6,13 @@ import me.jinkun.rds.core.sort.ISort;
 import me.jinkun.rds.core.sort.Sorter;
 import me.jinkun.rds.sys.entity.Org;
 import me.jinkun.rds.sys.mapper.IOrgMapper;
+import me.jinkun.rds.sys.mapper.IUserOrgMapper;
 import me.jinkun.rds.sys.model.Tree;
 import me.jinkun.rds.sys.service.IOrgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +27,8 @@ public class OrgServiceImpl implements IOrgService {
 
     @Autowired
     IOrgMapper iOrgMapper;
+    @Autowired
+    IUserOrgMapper iUserOrgMapper;
 
     @Override
     public Optional<Org> loadByPK(Long id, Set<String> fields) {
@@ -39,32 +39,110 @@ public class OrgServiceImpl implements IOrgService {
         return Optional.of(org);
     }
 
+    @Override
     public List<Org> loads(Org org, Set<String> fields, Set<ISort> sortSet, IPage page) {
         return iOrgMapper.loads(org, fields, sortSet, page);
     }
 
+    @Override
     public int loadCount(Org org) {
         return iOrgMapper.loadCount(org);
     }
 
+    @Override
     public boolean saveOrUpdate(Org org) {
-        int count=0;
         boolean save = Objects.isNull(org.getId());
+        Date now = new Date();
+        boolean flag = false;
         if (save) {
-            count = iOrgMapper.insert(org);
+            org.setIsLeaf(true);
+            org.setDelFlag(false);
+            org.setUpdateTime(now);
+            org.setCreateTime(now);
+            flag = iOrgMapper.insert(org) > 0;
         }
-        count = iOrgMapper.update(org);
+        org.setUpdateTime(now);
+        flag = iOrgMapper.update(org) > 0;
         //更新父机构状态
-        if (count > 0 && Objects.nonNull(org.getPid())) {
-            Org parent = iOrgMapper.loadByPK(org.getPid(), Sets.newHashSet("is_leaf"));
-            parent.setIsLeaf(false);
-            iOrgMapper.update(org);
+        if (flag && Objects.nonNull(org.getPid())) {
+            Org parent = iOrgMapper.loadByPK(org.getPid(), Sets.newHashSet("id", "is_leaf"));
+            if (parent.getIsLeaf()) {
+                parent.setIsLeaf(false);
+                saveOrUpdate(parent);
+            }
         }
-        return count > 0;
+        return flag;
     }
 
+    @Override
     public boolean deleteByIds(Set<Long> ids) {
-        return iOrgMapper.deleteByIds(ids) > 0;
+        ids.stream().forEach(id -> {
+            recursionDelete(id);
+            updateParent(id);
+        });
+        return true;
+    }
+
+    private void recursionDelete(Long id) {
+        boolean flag = logicDelete(id);
+        if (flag) {
+            List<Org> childrenList = loadsByPid(id);
+            if (Objects.nonNull(childrenList) && !childrenList.isEmpty()) {
+                childrenList.stream().forEach(org -> recursionDelete(org.getId()));
+            }
+        }
+    }
+
+    /**
+     * 更新当前节点的父节点的叶子情况
+     *
+     * @param id 当前节点的id
+     */
+    private void updateParent(Long id) {
+        Optional<Org> orgOptional = loadByPK(id, Sets.newHashSet("pid"));
+        if (orgOptional.isPresent()) {
+            Org org = orgOptional.get();
+            org.setDelFlag(false);
+            int count = loadCount(org);
+            if (count == 0) {
+                Org parent = new Org();
+                parent.setId(org.getPid());
+                parent.setIsLeaf(true);
+                saveOrUpdate(parent);
+            }
+        }
+    }
+
+    /**
+     * 根据pid加载列表
+     *
+     * @param id 父节点id
+     * @return
+     */
+    private List<Org> loadsByPid(Long id) {
+        Org org = new Org();
+        org.setPid(id);
+        org.setDelFlag(false);
+        return loads(org, Sets.newHashSet("id", "pid"), null, null);
+    }
+
+    /**
+     * 逻辑删除
+     *
+     * @param id 组织id
+     */
+    private boolean logicDelete(Long id) {
+        //逻辑删除组织
+        Org org = new Org();
+        org.setId(id);
+        org.setDelFlag(true);
+        boolean flag = iOrgMapper.update(org) > 0;
+
+        //更新中间表
+        if (flag) {
+            iUserOrgMapper.deleteByOrgIds(Sets.newHashSet(id));
+        }
+        return flag;
     }
 
     @Override
@@ -84,7 +162,6 @@ public class OrgServiceImpl implements IOrgService {
                     return tree;
                 })
                 .collect(Collectors.toList());
-
         return topList;
     }
 
@@ -94,7 +171,7 @@ public class OrgServiceImpl implements IOrgService {
                 allTreeList.stream()
                         .filter(tree -> tree.getPid() != null && tree.getPid().equals(id))
                         .map(tree -> {
-                            if (tree.isLeaf()) {
+                            if (!tree.isLeaf()) {
                                 // 把子菜单的子菜单再循环一遍
                                 tree.setChildren(prepareTreeChiled(tree.getId(), allTreeList));
                             }
