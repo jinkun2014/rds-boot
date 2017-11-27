@@ -181,7 +181,8 @@ var SysUser = {
                 onBeforeLoad: function (params) {
                     params.pageNo = params.page;
                     params.pageSize = params.rows;
-                    delete params.rows
+                    delete params.rows;
+                    delete params.page;
                 },
                 loadFilter: function (data) {
                     if (checkResp(data)) {
@@ -372,7 +373,7 @@ var SysUser = {
                             type: "POST",
                             url: SysUser.URL.delete(),
                             data:{ids:ids},
-                            success: function () {
+                            success: function (data) {
                                 if(checkResp(data)){
                                     SysUser.list.reload();
                                     //如果不清空，删除还可以编辑BUG

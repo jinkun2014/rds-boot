@@ -108,17 +108,16 @@
         <include refid="selectUserOrgSql"/>
     </select>
 
-
+    <!-- 批量插入 -->
     <insert id="insertBatch" useGeneratedKeys="true" keyProperty="userOrg.id">
         INSERT INTO sys_user_org
         (
-        id,
         user_id,
         org_id
         )
         VALUES
         <foreach collection="orgIds"  item="orgId" separator=",">
-            (null,#{userId}, #orgId)
+            (#{userId}, #{orgId})
         </foreach>
     </insert>
 

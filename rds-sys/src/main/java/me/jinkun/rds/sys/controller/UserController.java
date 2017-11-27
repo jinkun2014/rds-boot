@@ -34,8 +34,8 @@ public class UserController extends CommonController {
 
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public Object save(User user) {
-        boolean flag = iUserService.saveOrUpdate(user);
+    public Object save(UserExtend userExtend) {
+        boolean flag = iUserService.saveOrUpdate(userExtend);
         if (flag) {
             return setJsonViewData(ResultCode.SUCCESS);
         }
