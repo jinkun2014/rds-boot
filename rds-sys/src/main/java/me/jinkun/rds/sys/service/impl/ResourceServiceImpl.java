@@ -48,23 +48,89 @@ public class ResourceServiceImpl implements IResourceService {
     }
 
     public boolean saveOrUpdate(Resource resource) {
-        int count=0;
         boolean save = Objects.isNull(resource.getId());
+        boolean flag;
         if (save) {
-            count = iResourceMapper.insert(resource);
+            flag = iResourceMapper.insert(resource)>0;
         }
-        count = iResourceMapper.update(resource);
+        flag = iResourceMapper.update(resource)>0;
         //更新父机构状态
-        if (count > 0 && Objects.nonNull(resource.getPid())) {
+        if (flag && Objects.nonNull(resource.getPid())) {
             Resource parent = iResourceMapper.loadByPK(resource.getPid(), Sets.newHashSet("is_leaf"));
             parent.setIsLeaf(false);
             iResourceMapper.update(resource);
         }
-        return count > 0;
+        return flag;
     }
 
     public boolean deleteByIds(Set<Long> ids) {
-        return iResourceMapper.deleteByIds(ids) > 0;
+        ids.stream().forEach(id -> {
+            recursionDelete(id);
+            updateParent(id);
+        });
+        return true;
+    }
+
+    private void recursionDelete(Long id) {
+        boolean flag = logicDelete(id);
+        if (flag) {
+            List<Resource> childrenList = loadsByPid(id);
+            if (Objects.nonNull(childrenList) && !childrenList.isEmpty()) {
+                childrenList.stream().forEach(resource -> recursionDelete(resource.getId()));
+            }
+        }
+    }
+
+    /**
+     * 更新当前节点的父节点的叶子情况
+     *
+     * @param id 当前节点的id
+     */
+    private void updateParent(Long id) {
+        Optional<Resource> resourceOptional = loadByPK(id, Sets.newHashSet("pid"));
+        if (resourceOptional.isPresent()) {
+            Resource resource = resourceOptional.get();
+            resource.setDelFlag(false);
+            int count = loadCount(resource);
+            if (count == 0) {
+                Resource parent = new Resource();
+                parent.setId(resource.getPid());
+                parent.setIsLeaf(true);
+                saveOrUpdate(parent);
+            }
+        }
+    }
+
+    /**
+     * 根据pid加载列表
+     *
+     * @param id 父节点id
+     * @return
+     */
+    private List<Resource> loadsByPid(Long id) {
+        Resource resource = new Resource();
+        resource.setPid(id);
+        resource.setDelFlag(false);
+        return loads(resource, Sets.newHashSet("id", "pid"), null, null);
+    }
+
+    /**
+     * 逻辑删除
+     *
+     * @param id 组织id
+     */
+    private boolean logicDelete(Long id) {
+        //逻辑删除组织
+        Resource resource = new Resource();
+        resource.setId(id);
+        resource.setDelFlag(true);
+        boolean flag = iResourceMapper.update(resource) > 0;
+
+        //更新中间表
+        if (flag) {
+
+        }
+        return flag;
     }
 
     @Override
@@ -94,7 +160,7 @@ public class ResourceServiceImpl implements IResourceService {
                 allTreeList.stream()
                         .filter(tree -> tree.getPid() != null && tree.getPid().equals(id))
                         .map(tree -> {
-                            if (tree.isLeaf()) {
+                            if (!tree.isLeaf()) {
                                 // 把子菜单的子菜单再循环一遍
                                 tree.setChildren(prepareTreeChiled(tree.getId(), allTreeList));
                             }

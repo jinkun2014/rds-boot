@@ -31,7 +31,7 @@ var SysUser = {
             return ctx + "/sys/org/tree";
         },
         roleListAll: function () {
-            return ctx + "/sys/roles/all";
+            return ctx + "/sys/role/all";
         },
     },
     input: {
@@ -346,7 +346,7 @@ var SysUser = {
                                         }
                                     },
                                     onLoadSuccess: function () {
-                                        SysUserRole.combobox('setValues', data.data.roleId);
+                                        SysUserRole.combobox('setValues', data.data.roleIds);
                                     }
                                 });
                             }

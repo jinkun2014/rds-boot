@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.jinkun.rds.sys.mapper.IRoleResourceMapper">
+
+    <!--配置了autoMapping=true,其他的无需配置，将会自动映射-->
+    <resultMap id="roleResourceResultMap" type="me.jinkun.rds.sys.entity.RoleResource" autoMapping="true"/>
+
+    <!--公共sql，其他Mapper可以调用-->
+    <sql id="commonFieldSql">
+        <choose>
+            <when test="fields == null or fields.size() == 0">*</when>
+            <otherwise>
+                <foreach collection="fields" separator="," item="field">${field}</foreach>
+            </otherwise>
+        </choose>
+    </sql>
+
+    <sql id="commonIdsSql">
+        <foreach collection="ids" open="WHERE id IN(" item="id" separator="," close=")">#{id}</foreach>
+    </sql>
+
+    <sql id="selectRoleResourceSql">
+        <where>
+            <choose>
+                <when test="roleResource==null"></when>
+                <otherwise>
+                    <if test="roleResource.id!=null">AND id=#{roleResource.id}</if>
+                    <if test="roleResource.roleId!=null">AND role_id=#{roleResource.roleId}</if>
+                    <if test="roleResource.resourceId!=null">AND resource_id=#{roleResource.resourceId}</if>
+                </otherwise>
+            </choose>
+        </where>
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="roleResource.id">
+        INSERT INTO sys_role_resource
+        (
+        id,
+        role_id,
+        resource_id
+        )
+        VALUES
+        (
+        #{roleResource.id},
+        #{roleResource.roleId},
+        #{roleResource.resourceId}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE sys_role_resource
+        <set>
+            <if test="roleResource.roleId != null">
+            role_id = #{roleResource.roleId},
+            </if>
+            <if test="roleResource.resourceId != null">
+            resource_id = #{roleResource.resourceId}
+            </if>
+        </set>
+        WHERE id = #{roleResource.id}
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM sys_role_resource
+        <include refid="selectRoleResourceSql"/>
+    </delete>
+
+    <delete id="deleteByIds">
+        DELETE
+        FROM sys_role_resource
+        <include refid="commonIdsSql"/>
+    </delete>
+
+    <select id="loadCount" resultType="int">
+        SELECT COUNT(id)
+        FROM sys_role_resource
+        <include refid="selectRoleResourceSql"/>
+    </select>
+
+    <select id="loadByPK" resultMap="roleResourceResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_role_resource
+        WHERE id = #{id}
+    </select>
+
+    <select id="loads" resultMap="roleResourceResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_role_resource
+        <include refid="selectRoleResourceSql"/>
+    </select>
+
+</mapper>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.jinkun.rds.sys.mapper.IUserRoleMapper">
+
+    <!--配置了autoMapping=true,其他的无需配置，将会自动映射-->
+    <resultMap id="userRoleResultMap" type="me.jinkun.rds.sys.entity.UserRole" autoMapping="true"/>
+
+    <!--公共sql，其他Mapper可以调用-->
+    <sql id="commonFieldSql">
+        <choose>
+            <when test="fields == null or fields.size() == 0">*</when>
+            <otherwise>
+                <foreach collection="fields" separator="," item="field">${field}</foreach>
+            </otherwise>
+        </choose>
+    </sql>
+
+    <sql id="commonIdsSql">
+        <foreach collection="ids" open="WHERE id IN(" item="id" separator="," close=")">#{id}</foreach>
+    </sql>
+
+    <sql id="selectUserRoleSql">
+        <where>
+            <choose>
+                <when test="userRole==null"></when>
+                <otherwise>
+                    <if test="userRole.id!=null">AND id=#{userRole.id}</if>
+                    <if test="userRole.userId!=null">AND user_id=#{userRole.userId}</if>
+                    <if test="userRole.roleId!=null">AND role_id=#{userRole.roleId}</if>
+                </otherwise>
+            </choose>
+        </where>
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="userRole.id">
+        INSERT INTO sys_user_role
+        (
+        id,
+        user_id,
+        role_id
+        )
+        VALUES
+        (
+        #{userRole.id},
+        #{userRole.userId},
+        #{userRole.roleId}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE sys_user_role
+        <set>
+            <if test="userRole.userId != null">
+            user_id = #{userRole.userId},
+            </if>
+            <if test="userRole.roleId != null">
+            role_id = #{userRole.roleId}
+            </if>
+        </set>
+        WHERE id = #{userRole.id}
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM sys_user_role
+        <include refid="selectUserRoleSql"/>
+    </delete>
+
+    <delete id="deleteByIds">
+        DELETE
+        FROM sys_user_role
+        <include refid="commonIdsSql"/>
+    </delete>
+
+    <select id="loadCount" resultType="int">
+        SELECT COUNT(id)
+        FROM sys_user_role
+        <include refid="selectUserRoleSql"/>
+    </select>
+
+    <select id="loadByPK" resultMap="userRoleResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_user_role
+        WHERE id = #{id}
+    </select>
+
+    <select id="loads" resultMap="userRoleResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_user_role
+        <include refid="selectUserRoleSql"/>
+    </select>
+
+    <!-- 查询角色ids -->
+    <select id="loadsRoleId" resultType="long">
+        SELECT
+        DISTINCT(role_id)
+        FROM sys_user_role
+        <include refid="selectUserRoleSql"/>
+    </select>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="userRole.id">
+        INSERT INTO sys_user_role
+        (
+        user_id,
+        role_id
+        )
+        VALUES
+        <foreach collection="roleIds"  item="roleId" separator=",">
+            (#{userId}, #{roleId})
+        </foreach>
+    </insert>
+
+</mapper>

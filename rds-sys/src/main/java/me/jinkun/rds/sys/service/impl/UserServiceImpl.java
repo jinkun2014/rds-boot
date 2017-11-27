@@ -5,8 +5,10 @@ import me.jinkun.rds.core.sort.ISort;
 import me.jinkun.rds.core.utils.UtilBean;
 import me.jinkun.rds.sys.entity.User;
 import me.jinkun.rds.sys.entity.UserOrg;
+import me.jinkun.rds.sys.entity.UserRole;
 import me.jinkun.rds.sys.mapper.IUserMapper;
 import me.jinkun.rds.sys.mapper.IUserOrgMapper;
+import me.jinkun.rds.sys.mapper.IUserRoleMapper;
 import me.jinkun.rds.sys.model.UserExtend;
 import me.jinkun.rds.sys.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class UserServiceImpl implements IUserService {
     IUserMapper iUserMapper;
     @Autowired
     IUserOrgMapper iUserOrgMapper;
+    @Autowired
+    IUserRoleMapper iUserRoleMapper;
 
     @Override
     public Optional<User> loadByPK(Long id, Set<String> fields) {
@@ -83,10 +87,17 @@ public class UserServiceImpl implements IUserService {
         UserExtend ue = new UserExtend();
         UtilBean.copyPropertiesIgnoreNull(user, ue);
 
+        //查询组织
         UserOrg userOrg = new UserOrg();
         userOrg.setUserId(id);
         Set<Long> orgIds = iUserOrgMapper.loadsOrgId(userOrg);
         ue.setOrgIds(orgIds);
+
+        //查询角色
+        UserRole userRole = new UserRole();
+        userRole.setUserId(id);
+        Set<Long> roleIds = iUserRoleMapper.loadsRoleId(userRole);
+        ue.setRoleIds(roleIds);
 
         return Optional.of(ue);
     }
@@ -107,7 +118,16 @@ public class UserServiceImpl implements IUserService {
             UserOrg userOrg = new UserOrg();
             userOrg.setUserId(user.getId());
             iUserOrgMapper.delete(userOrg);
-            return iUserOrgMapper.insertBatch(user.getId(), orgIds) > 0;
+            iUserOrgMapper.insertBatch(user.getId(), orgIds);
+        }
+
+        //保存角色关系
+        Set<Long> roleIds = userExtend.getRoleIds();
+        if (Objects.nonNull(roleIds) && !roleIds.isEmpty()) {
+            UserRole userRole = new UserRole();
+            userRole.setUserId(user.getId());
+            iUserRoleMapper.delete(userRole);
+            iUserRoleMapper.insertBatch(user.getId(), roleIds);
         }
 
         return true;

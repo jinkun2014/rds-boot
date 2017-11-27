@@ -1,15 +1,12 @@
 package me.jinkun.rds.sys.controller;
 
 import com.google.common.collect.Sets;
-import me.jinkun.rds.core.page.IPage;
 import me.jinkun.rds.core.page.SimplePage;
-import me.jinkun.rds.core.sort.ISort;
 import me.jinkun.rds.core.sort.Sorter;
 import me.jinkun.rds.core.support.web.CommonController;
 import me.jinkun.rds.core.support.web.ResultCode;
-import me.jinkun.rds.sys.entity.Resource;
-import me.jinkun.rds.sys.model.Tree;
-import me.jinkun.rds.sys.service.IResourceService;
+import me.jinkun.rds.sys.entity.UserRole;
+import me.jinkun.rds.sys.service.IUserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,21 +15,21 @@ import java.util.*;
 
 /**
  *
- * 资源-控制器
+ * 用户-角色-控制器
  * @author JinKun
- * @date 2017-11-25
- * @time 15:26
+ * @date 2017-11-27
+ * @time 17:07
  */
 @RestController
-@RequestMapping("/sys/resource")
-public class ResourceController extends CommonController {
+@RequestMapping("/sys/user/role")
+public class UserRoleController extends CommonController {
 
     @Autowired
-    IResourceService iResourceService;
+    IUserRoleService iUserRoleService;
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public Object save(Resource resource) {
-        boolean flag = iResourceService.saveOrUpdate(resource);
+    public Object save(UserRole userRole) {
+        boolean flag = iUserRoleService.saveOrUpdate(userRole);
         if (flag) {
             return setJsonViewData(ResultCode.SUCCESS);
         }
@@ -40,9 +37,9 @@ public class ResourceController extends CommonController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public Object update(@PathVariable("id") Long id, Resource resource) {
-        resource.setId(id);
-        boolean flag = iResourceService.saveOrUpdate(resource);
+    public Object update(@PathVariable("id") Long id, UserRole userRole) {
+        userRole.setId(id);
+        boolean flag = iUserRoleService.saveOrUpdate(userRole);
         if (flag) {
             return setJsonViewData(ResultCode.SUCCESS);
         }
@@ -55,7 +52,7 @@ public class ResourceController extends CommonController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public Object delete(String ids) {
         Set<Long> idSets = idsToSets(ids);
-        boolean flag = iResourceService.deleteByIds(idSets);
+        boolean flag = iUserRoleService.deleteByIds(idSets);
         if (flag) {
             return setJsonViewData(ResultCode.SUCCESS);
         }
@@ -64,9 +61,9 @@ public class ResourceController extends CommonController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Object get(@PathVariable("id") Long id) {
-        Optional<Resource> resourceOptional = iResourceService.loadByPK(id, null);
-        if (resourceOptional.isPresent()) {
-            return setJsonViewData(resourceOptional.get());
+        Optional<UserRole> userRoleOptional = iUserRoleService.loadByPK(id, null);
+        if (userRoleOptional.isPresent()) {
+            return setJsonViewData(userRoleOptional.get());
         }
         return setJsonViewData(ResultCode.NO_EXISTS);
     }
@@ -74,25 +71,13 @@ public class ResourceController extends CommonController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public Object list(@RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
                        @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-                       Resource resource) {
-        resource.setDelFlag(false);
-        int totalRecordCount = iResourceService.loadCount(resource);
-        IPage page = new SimplePage(pageNo, pageSize);
-        Set<ISort> sortSet = Sets.newHashSet(new Sorter("id", false));
-        List<Resource> resourceList = totalRecordCount == 0 ? Collections.EMPTY_LIST : iResourceService.loads(resource,null, sortSet, page);
+                       UserRole userRole) {
+        int totalRecordCount = iUserRoleService.loadCount(userRole);
+        List<UserRole> userRoleList = totalRecordCount == 0 ? Collections.EMPTY_LIST : iUserRoleService.loads(userRole,null, Sets.newHashSet(new Sorter("id", false)), new SimplePage(pageNo, pageSize));
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("total", totalRecordCount);
-        resultMap.put("list", resourceList);
+        resultMap.put("list", userRoleList);
         return setJsonViewData(resultMap);
-    }
-
-    @RequestMapping(value = "/tree", method = RequestMethod.GET)
-    public Object tree() {
-        List<Tree> treeList = iResourceService.listTree();
-        if(Objects.nonNull(treeList)){
-            return setJsonViewData(treeList);
-        }
-        return setJsonViewData(ResultCode.SYSTEM_ERROR);
     }
 
 }

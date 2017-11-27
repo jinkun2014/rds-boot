@@ -8,35 +8,35 @@ var SysResourceTree; //资源树
 var SysRole = {
     URL: {
         inputUI: function () {
-            return ctx + "/sys/roles/ui/input.html";
+            return ctx + "/sys/role/ui/input.html";
         },
         listUI: function () {
-            return ctx + "/sys/roles/ui/list.html";
+            return ctx + "/sys/role/ui/list.html";
         },
         resourceUI: function () {
-            return ctx + "/sys/roles/ui/resource.html";
+            return ctx + "/sys/role/ui/resource.html";
         },
         list: function () {
-            return ctx + "/sys/roles/";
+            return ctx + "/sys/role/list";
         },
         save: function () {
-            return ctx + "/sys/roles/save";
+            return ctx + "/sys/role/save";
         },
         delete: function () {
-            return ctx + "/sys/roles/delete";
+            return ctx + "/sys/role/delete";
         },
         get: function (id) {
-            return ctx + "/sys/roles/" + id;
+            return ctx + "/sys/role/" + id;
         },
         resourceTree: function () {
-            return ctx + "/sys/resources/tree";
+            return ctx + "/sys/resource/tree";
         },
         getResources: function (id) {
-            return ctx + "/sys/roles/" + id + "/resources";
+            return ctx + "/sys/role/" + id + "/resources";
         },
         saveResources: function (id) {
-            return ctx + "/sys/roles/" + id + "/resources";
-        },
+            return ctx + "/sys/role/" + id + "/resources";
+        }
     },
     resource: {
         init: function (ct, id) {
@@ -55,7 +55,7 @@ var SysRole = {
                     return true;
                 },
                 loadFilter: function (data, parent) {
-                    if (data.code == 200) {
+                    if (checkResp(data)) {
                         return data.data;
                     }
                 },
@@ -66,7 +66,7 @@ var SysRole = {
                         type: "GET",
                         url: SysRole.URL.getResources(id),
                         success: function (data) {
-                            if (data.code == 200) {
+                            if (checkResp(data)) {
                                 //回显已有的权限
                                 var root = SysResourceTree.tree('getRoots'); // 取到树的根节点
                                 for (var i in root) {
@@ -94,7 +94,7 @@ var SysRole = {
                     url: SysRole.URL.saveResources(SysRoleList.datagrid("getSelections")[0].id),
                     data: {ids: ids},
                     success: function (data) {
-                        if (data.code == 200) {
+                        if (checkResp(data)) {
                             SysRole.resource.close();
                         }
                     }
@@ -219,16 +219,15 @@ var SysRole = {
                 },
                 //替换分页请求参数
                 onBeforeLoad: function (params) {
-                    params.page = params.page
-                    params.size = params.rows
-                    delete params.rows
+                    params.pageNo = params.page;
+                    params.pageSize = params.rows;
+                    delete params.rows;
+                    delete params.page;
                 },
                 loadFilter: function (data) {
-                    if (data.data) {
+                    if (checkResp(data)) {
                         //返回结果进行封装
-                        return {total: data.data.total, rows: data.data.result};
-                    } else {
-                        return data;
+                        return {total: data.data.total, rows: data.data.list};
                     }
                 }
             });
@@ -309,7 +308,7 @@ var SysRole = {
                         type: "GET",
                         url: SysRole.URL.get(sels[0].id),
                         success: function (data) {
-                            if (data.code == 200) {
+                            if (checkResp(data)) {
                                 SysRoleForm.form("load", data.data);
                             }
                         }
@@ -335,10 +334,12 @@ var SysRole = {
                             type: "POST",
                             url: SysRole.URL.delete(),
                             data:{ids:ids},
-                            success: function () {
-                                SysRole.list.reload();
-                                //如果不清空，删除还可以编辑BUG
-                                SysRole.list.clearSelectionsAndChecked();
+                            success: function (data) {
+                                if(checkResp(data)){
+                                    SysRole.list.reload();
+                                    //如果不清空，删除还可以编辑BUG
+                                    SysRole.list.clearSelectionsAndChecked();
+                                }
                             }
                         });
                     }
@@ -421,6 +422,6 @@ var SysRole = {
                     SysRole.resource.init(ctx, sels[0].id);
                 }
             });
-        },
+        }
     }
 }

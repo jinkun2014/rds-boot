@@ -37,4 +37,9 @@ public class PageController extends CommonController {
         return "sys/sys-user/sys-user-" + ui;
     }
 
+    @RequestMapping(value = "/sys/role/ui/{ui}.html", method = RequestMethod.GET)
+    public String role(@PathVariable("ui") String ui) {
+        return "sys/sys-role/sys-role-" + ui;
+    }
+
 }

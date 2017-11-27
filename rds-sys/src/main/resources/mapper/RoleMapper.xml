@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.jinkun.rds.sys.mapper.IRoleMapper">
+
+    <!--配置了autoMapping=true,其他的无需配置，将会自动映射-->
+    <resultMap id="roleResultMap" type="me.jinkun.rds.sys.entity.Role" autoMapping="true"/>
+
+    <!--公共sql，其他Mapper可以调用-->
+    <sql id="commonFieldSql">
+        <choose>
+            <when test="fields == null or fields.size() == 0">*</when>
+            <otherwise>
+                <foreach collection="fields" separator="," item="field">${field}</foreach>
+            </otherwise>
+        </choose>
+    </sql>
+
+    <sql id="commonIdsSql">
+        <foreach collection="ids" open="WHERE id IN(" item="id" separator="," close=")">#{id}</foreach>
+    </sql>
+
+    <sql id="selectRoleSql">
+        <where>
+            <choose>
+                <when test="role==null"></when>
+                <otherwise>
+                    <if test="role.id!=null">AND id=#{role.id}</if>
+                    <if test="role.name!=null">AND name=#{role.name}</if>
+                    <if test="role.seq!=null">AND seq=#{role.seq}</if>
+                    <if test="role.description!=null">AND description=#{role.description}</if>
+                    <if test="role.status!=null">AND status=#{role.status}</if>
+                    <if test="role.delFlag!=null">AND del_flag=#{role.delFlag}</if>
+                    <if test="role.updateTime!=null">AND update_time=#{role.updateTime}</if>
+                    <if test="role.createTime!=null">AND create_time=#{role.createTime}</if>
+                </otherwise>
+            </choose>
+        </where>
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="role.id">
+        INSERT INTO sys_role
+        (
+        id,
+        name,
+        seq,
+        description,
+        status,
+        del_flag,
+        update_time,
+        create_time
+        )
+        VALUES
+        (
+        #{role.id},
+        #{role.name},
+        #{role.seq},
+        #{role.description},
+        #{role.status},
+        #{role.delFlag},
+        #{role.updateTime},
+        #{role.createTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE sys_role
+        <set>
+            <if test="role.name != null">
+            name = #{role.name},
+            </if>
+            <if test="role.seq != null">
+            seq = #{role.seq},
+            </if>
+            <if test="role.description != null">
+            description = #{role.description},
+            </if>
+            <if test="role.status != null">
+            status = #{role.status},
+            </if>
+            <if test="role.delFlag != null">
+            del_flag = #{role.delFlag},
+            </if>
+            <if test="role.updateTime != null">
+            update_time = #{role.updateTime},
+            </if>
+            <if test="role.createTime != null">
+            create_time = #{role.createTime}
+            </if>
+        </set>
+        WHERE id = #{role.id}
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM sys_role
+        <include refid="selectRoleSql"/>
+    </delete>
+
+    <delete id="deleteByIds">
+        DELETE
+        FROM sys_role
+        <include refid="commonIdsSql"/>
+    </delete>
+
+    <select id="loadCount" resultType="int">
+        SELECT COUNT(id)
+        FROM sys_role
+        <include refid="selectRoleSql"/>
+    </select>
+
+    <select id="loadByPK" resultMap="roleResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_role
+        WHERE id = #{id}
+    </select>
+
+    <select id="loads" resultMap="roleResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_role
+        <include refid="selectRoleSql"/>
+    </select>
+
+</mapper>

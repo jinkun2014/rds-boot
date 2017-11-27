@@ -43,9 +43,9 @@ public class UserController extends CommonController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public Object update(@PathVariable("id") Long id, User user) {
-        user.setId(id);
-        boolean flag = iUserService.saveOrUpdate(user);
+    public Object update(@PathVariable("id") Long id, UserExtend userExtend) {
+        userExtend.setId(id);
+        boolean flag = iUserService.saveOrUpdate(userExtend);
         if (flag) {
             return setJsonViewData(ResultCode.SUCCESS);
         }

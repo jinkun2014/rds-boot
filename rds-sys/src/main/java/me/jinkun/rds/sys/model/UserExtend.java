@@ -17,4 +17,5 @@ import java.util.Set;
 @ToString
 public class UserExtend extends User {
     private Set<Long> orgIds;
+    private Set<Long> roleIds;
 }
