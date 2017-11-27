@@ -68,4 +68,12 @@ public interface IRoleService {
      * @return
      */
     Set<Long> getResourceIds(Long roleId);
+
+    /**
+     * 保存角色下的资源
+     * @param id
+     * @param resourceIds
+     * @return
+     */
+    boolean saveResourceIds(Long id, Set<Long> resourceIds);
 }

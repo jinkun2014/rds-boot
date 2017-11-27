@@ -42,4 +42,9 @@ public class PageController extends CommonController {
         return "sys/sys-role/sys-role-" + ui;
     }
 
+    @RequestMapping(value = "/sys/log/ui/{ui}.html", method = RequestMethod.GET)
+    public String log(@PathVariable("ui") String ui) {
+        return "sys/sys-log/sys-log-" + ui;
+    }
+
 }

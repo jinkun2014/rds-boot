@@ -7,31 +7,31 @@ var SysLogForm;
 var SysLog = {
     URL: {
         inputUI: function () {
-            return ctx + "/sys/logs/ui/input.html";
+            return ctx + "/sys/log/ui/input.html";
         },
         listUI: function () {
-            return ctx + "/sys/logs/ui/list.html";
+            return ctx + "/sys/log/ui/list.html";
         },
         importUI: function () {
-            return ctx + "/sys/logs/ui/import.html";
+            return ctx + "/sys/log/ui/import.html";
         },
         list: function () {
-            return ctx + "/sys/logs/";
+            return ctx + "/sys/log/list";
         },
         save: function () {
-            return ctx + "/sys/logs/save";
+            return ctx + "/sys/log/save";
         },
         delete: function () {
-            return ctx + "/sys/logs/delete";
+            return ctx + "/sys/log/delete";
         },
         get: function (id) {
-            return ctx + "/sys/logs/" + id;
+            return ctx + "/sys/log/" + id;
         },
         exportXls: function () {
-            return ctx + "/sys/logs/exportXls";
+            return ctx + "/sys/log/exportXls";
         },
         importXls: function () {
-            return ctx + "/sys/logs/importXls";
+            return ctx + "/sys/log/importXls";
         }
     },
     input: {
@@ -52,7 +52,7 @@ var SysLog = {
                 },
                 success: function (data) {
                     var data = eval('(' + data + ')');
-                    if (data.code == 200) {
+                    if (checkResp(data)) {
                         SysLog.input.close();
                         SysLog.list.reload();
                     }
@@ -132,16 +132,15 @@ var SysLog = {
                 },
                 //替换分页请求参数
                 onBeforeLoad: function (params) {
-                    params.page = params.page
-                    params.size = params.rows
+                    params.pageNo = params.page;
+                    params.pageSize = params.rows;
+                    delete params.page;
                     delete params.rows
                 },
                 loadFilter: function (data) {
-                    if (data.data) {
+                    if (checkResp(data)) {
                         //返回结果进行封装
-                        return {total: data.data.total, rows: data.data.result};
-                    } else {
-                        return data;
+                        return {total: data.data.total, rows: data.data.list};
                     }
                 }
             });
@@ -222,7 +221,7 @@ var SysLog = {
                         type: "GET",
                         url: SysLog.URL.get(sels[0].id),
                         success: function (data) {
-                            if (data.code == 200) {
+                            if (checkResp(data)) {
                                 SysLogForm.form("load", data.data);
                             }
                         }
@@ -248,10 +247,12 @@ var SysLog = {
                             type: "POST",
                             url: SysLog.URL.delete(),
                             data: {ids: ids},
-                            success: function () {
-                                SysLog.list.reload();
-                                //如果不清空，删除还可以编辑BUG
-                                SysLog.list.clearSelectionsAndChecked();
+                            success: function (data) {
+                                if(checkResp(data)){
+                                    SysLog.list.reload();
+                                    //如果不清空，删除还可以编辑BUG
+                                    SysLog.list.clearSelectionsAndChecked();
+                                }
                             }
                         });
                     }
@@ -315,8 +316,8 @@ var SysLog = {
                             url: SysLog.URL.exportXls(),
                             data: {ids: ids},
                             success: function (data) {
-                                if (data.code == 200) {
-                                    window.location.href = "/sys/files/download/xls?fileName=" + data.data;
+                                if (checkResp(data)) {
+                                    window.location.href = "/sys/file/download/xls?fileName=" + data.data;
                                 }
                             }
                         });

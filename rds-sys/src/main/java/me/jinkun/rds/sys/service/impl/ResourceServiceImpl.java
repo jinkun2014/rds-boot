@@ -6,6 +6,7 @@ import me.jinkun.rds.core.sort.ISort;
 import me.jinkun.rds.core.sort.Sorter;
 import me.jinkun.rds.sys.entity.Resource;
 import me.jinkun.rds.sys.mapper.IResourceMapper;
+import me.jinkun.rds.sys.mapper.IRoleResourceMapper;
 import me.jinkun.rds.sys.model.Tree;
 import me.jinkun.rds.sys.service.IResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ public class ResourceServiceImpl implements IResourceService {
 
     @Autowired
     IResourceMapper iResourceMapper;
+    @Autowired
+    IRoleResourceMapper iRoleResourceMapper;
 
     @Override
     public Optional<Resource> loadByPK(Long id, Set<String> fields) {
@@ -117,7 +120,7 @@ public class ResourceServiceImpl implements IResourceService {
     /**
      * 逻辑删除
      *
-     * @param id 组织id
+     * @param id 资源id
      */
     private boolean logicDelete(Long id) {
         //逻辑删除组织
@@ -126,9 +129,9 @@ public class ResourceServiceImpl implements IResourceService {
         resource.setDelFlag(true);
         boolean flag = iResourceMapper.update(resource) > 0;
 
-        //更新中间表
+        //删除角色资源表
         if (flag) {
-
+            iRoleResourceMapper.deleteByResourceIds(Sets.newHashSet(id));
         }
         return flag;
     }

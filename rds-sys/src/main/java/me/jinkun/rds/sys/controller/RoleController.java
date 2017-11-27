@@ -88,15 +88,25 @@ public class RoleController extends CommonController {
     public Object list(Role role) {
         role.setDelFlag(false);
         int totalRecordCount = iRoleService.loadCount(role);
-        List<Role> roleList = totalRecordCount == 0 ? Collections.EMPTY_LIST : iRoleService.loads(role, Sets.newHashSet("id","name"), Sets.newHashSet(new Sorter("id", false)), null);
+        List<Role> roleList = totalRecordCount == 0 ? Collections.EMPTY_LIST : iRoleService.loads(role, Sets.newHashSet("id", "name"), Sets.newHashSet(new Sorter("id", false)), null);
         return setJsonViewData(roleList);
     }
 
     /**
-     *
+     * 根据角色id获取资源
      */
     @RequestMapping(value = "/{id}/resources", method = RequestMethod.GET)
     public Object getResources(@PathVariable("id") Long id) {
         return setJsonViewData(iRoleService.getResourceIds(id));
+    }
+
+    @RequestMapping(value = "{id}/resources", method = RequestMethod.POST)
+    public Object saveResources(@PathVariable("id") Long id, String ids) {
+        Set<Long> resourceIds = idsToSets(ids);
+        boolean flag = iRoleService.saveResourceIds(id, resourceIds);
+        if (flag) {
+            return setJsonViewData(ResultCode.SUCCESS);
+        }
+        return setJsonViewData(ResultCode.SYSTEM_ERROR);
     }
 }

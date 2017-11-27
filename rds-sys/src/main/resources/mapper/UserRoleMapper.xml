@@ -51,10 +51,10 @@
         UPDATE sys_user_role
         <set>
             <if test="userRole.userId != null">
-            user_id = #{userRole.userId},
+                user_id = #{userRole.userId},
             </if>
             <if test="userRole.roleId != null">
-            role_id = #{userRole.roleId}
+                role_id = #{userRole.roleId}
             </if>
         </set>
         WHERE id = #{userRole.id}
@@ -101,15 +101,16 @@
     </select>
 
     <!-- 批量插入 -->
-    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="userRole.id">
+    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO sys_user_role
         (
+        id,
         user_id,
         role_id
         )
         VALUES
-        <foreach collection="roleIds"  item="roleId" separator=",">
-            (#{userId}, #{roleId})
+        <foreach collection="roleIds" item="roleId" separator=",">
+            (null,#{userId}, #{roleId})
         </foreach>
     </insert>
 

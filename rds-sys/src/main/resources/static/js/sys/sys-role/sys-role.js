@@ -142,7 +142,7 @@ var SysRole = {
                 },
                 success: function (data) {
                     var data = eval('(' + data + ')');
-                    if (data.code == 200) {
+                    if (checkResp(data)) {
                         SysRole.input.close();
                         SysRole.list.reload();
                     }

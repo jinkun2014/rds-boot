@@ -92,4 +92,37 @@
         <include refid="selectRoleResourceSql"/>
     </select>
 
+    <!-- 查询资源ids -->
+    <select id="loadsResourceId" resultType="long">
+        SELECT
+        DISTINCT(resource_id)
+        FROM sys_role_resource
+        <include refid="selectRoleResourceSql"/>
+    </select>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_role_resource
+        (
+        id,
+        resource_id,
+        role_id
+        )
+        VALUES
+        <foreach collection="resourceIds"  item="resourceId" separator=",">
+            (null,#{resourceId}, #{roleId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByRoleIds">
+        DELETE
+        FROM sys_role_resource
+        <foreach collection="roleIds" open="WHERE role_id IN(" item="id" separator="," close=")">#{id}</foreach>
+    </delete>
+
+    <delete id="deleteByResourceIds">
+        DELETE
+        FROM sys_role_resource
+        <foreach collection="resourceIds" open="WHERE resource_id IN(" item="id" separator="," close=")">#{id}</foreach>
+    </delete>
 </mapper>

@@ -1,4 +1,4 @@
-function saveXls(){
+function saveXls() {
     $("#SysLogXlsForm").form({
         url: SysLog.URL.importXls(),
         onSubmit: function () {
@@ -7,14 +7,14 @@ function saveXls(){
         },
         success: function (data) {
             var data = eval('(' + data + ')');
-            if (data.code == 200) {
+            if (checkResp(data)) {
                 $("#dialog").dialog('close');
                 SysLog.list.reload();
-
             }
         }
     }).submit();
 }
-function cancelXls(){
+
+function cancelXls() {
     $("#dialog").dialog('close');
 }

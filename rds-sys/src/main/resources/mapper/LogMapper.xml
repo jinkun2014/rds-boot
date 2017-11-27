@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.jinkun.rds.sys.mapper.ILogMapper">
+
+    <!--配置了autoMapping=true,其他的无需配置，将会自动映射-->
+    <resultMap id="logResultMap" type="me.jinkun.rds.sys.entity.Log" autoMapping="true"/>
+
+    <!--公共sql，其他Mapper可以调用-->
+    <sql id="commonFieldSql">
+        <choose>
+            <when test="fields == null or fields.size() == 0">*</when>
+            <otherwise>
+                <foreach collection="fields" separator="," item="field">${field}</foreach>
+            </otherwise>
+        </choose>
+    </sql>
+
+    <sql id="commonIdsSql">
+        <foreach collection="ids" open="WHERE id IN(" item="id" separator="," close=")">#{id}</foreach>
+    </sql>
+
+    <sql id="selectLogSql">
+        <where>
+            <choose>
+                <when test="log==null"></when>
+                <otherwise>
+                    <if test="log.id!=null">AND id=#{log.id}</if>
+                    <if test="log.time!=null">AND time=#{log.time}</if>
+                    <if test="log.ip!=null">AND ip=#{log.ip}</if>
+                    <if test="log.loginName!=null">AND login_name=#{log.loginName}</if>
+                    <if test="log.url!=null">AND url=#{log.url}</if>
+                    <if test="log.clazz!=null">AND clazz=#{log.clazz}</if>
+                    <if test="log.method!=null">AND method=#{log.method}</if>
+                    <if test="log.moudle!=null">AND moudle=#{log.moudle}</if>
+                    <if test="log.function!=null">AND function=#{log.function}</if>
+                </otherwise>
+            </choose>
+        </where>
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="log.id">
+        INSERT INTO sys_log
+        (
+        id,
+        time,
+        ip,
+        login_name,
+        url,
+        clazz,
+        method,
+        moudle,
+        function
+        )
+        VALUES
+        (
+        #{log.id},
+        #{log.time},
+        #{log.ip},
+        #{log.loginName},
+        #{log.url},
+        #{log.clazz},
+        #{log.method},
+        #{log.moudle},
+        #{log.function}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE sys_log
+        <set>
+            <if test="log.time != null">
+            time = #{log.time},
+            </if>
+            <if test="log.ip != null">
+            ip = #{log.ip},
+            </if>
+            <if test="log.loginName != null">
+            login_name = #{log.loginName},
+            </if>
+            <if test="log.url != null">
+            url = #{log.url},
+            </if>
+            <if test="log.clazz != null">
+            clazz = #{log.clazz},
+            </if>
+            <if test="log.method != null">
+            method = #{log.method},
+            </if>
+            <if test="log.moudle != null">
+            moudle = #{log.moudle},
+            </if>
+            <if test="log.function != null">
+            function = #{log.function}
+            </if>
+        </set>
+        WHERE id = #{log.id}
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM sys_log
+        <include refid="selectLogSql"/>
+    </delete>
+
+    <delete id="deleteByIds">
+        DELETE
+        FROM sys_log
+        <include refid="commonIdsSql"/>
+    </delete>
+
+    <select id="loadCount" resultType="int">
+        SELECT COUNT(id)
+        FROM sys_log
+        <include refid="selectLogSql"/>
+    </select>
+
+    <select id="loadByPK" resultMap="logResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_log
+        WHERE id = #{id}
+    </select>
+
+    <select id="loads" resultMap="logResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_log
+        <include refid="selectLogSql"/>
+    </select>
+
+    <select id="loadByIds" resultMap="logResultMap">
+        SELECT
+        <include refid="commonFieldSql"/>
+        FROM sys_log
+        <include refid="commonIdsSql"/>
+    </select>
+
+</mapper>

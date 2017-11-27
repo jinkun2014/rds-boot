@@ -1,8 +1,10 @@
 package me.jinkun.rds.sys.service.impl;
 
+import com.google.common.collect.Sets;
 import me.jinkun.rds.core.page.IPage;
 import me.jinkun.rds.core.sort.ISort;
 import me.jinkun.rds.sys.entity.Role;
+import me.jinkun.rds.sys.entity.RoleResource;
 import me.jinkun.rds.sys.mapper.IRoleMapper;
 import me.jinkun.rds.sys.mapper.IRoleResourceMapper;
 import me.jinkun.rds.sys.service.IRoleService;
@@ -50,6 +52,7 @@ public class RoleServiceImpl implements IRoleService {
         boolean save = Objects.isNull(role.getId());
         Date now = new Date();
         if (save) {
+            role.setDelFlag(false);
             role.setUpdateTime(now);
             role.setCreateTime(now);
             return iRoleMapper.insert(role) > 0;
@@ -60,11 +63,24 @@ public class RoleServiceImpl implements IRoleService {
 
     @Override
     public boolean deleteByIds(Set<Long> ids) {
-        return iRoleMapper.deleteByIds(ids) > 0;
+        boolean flag = iRoleMapper.deleteByIds(ids) > 0;
+        if (flag) {
+            iRoleResourceMapper.deleteByRoleIds(ids);
+        }
+        return flag;
     }
 
     @Override
     public Set<Long> getResourceIds(Long roleId) {
-        return null;
+        RoleResource roleResource = new RoleResource();
+        roleResource.setRoleId(roleId);
+        return iRoleResourceMapper.loadsResourceId(roleResource);
+    }
+
+    @Override
+    public boolean saveResourceIds(Long id, Set<Long> resourceIds) {
+        iRoleResourceMapper.deleteByRoleIds(Sets.newHashSet(id));
+        int count = iRoleResourceMapper.insertBatch(id, resourceIds);
+        return count > 0;
     }
 }
