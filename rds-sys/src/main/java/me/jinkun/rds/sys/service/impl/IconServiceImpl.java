@@ -35,14 +35,17 @@ public class IconServiceImpl implements IIconService {
         return Optional.of(icon);
     }
 
+    @Override
     public List<Icon> loads(Icon icon, Set<String> fields, Set<ISort> sortSet, IPage page) {
         return iIconMapper.loads(icon, fields, sortSet, page);
     }
 
+    @Override
     public int loadCount(Icon icon) {
         return iIconMapper.loadCount(icon);
     }
 
+    @Override
     public boolean saveOrUpdate(Icon icon) {
         boolean save = Objects.isNull(icon.getId());
         if (save) {
@@ -51,6 +54,7 @@ public class IconServiceImpl implements IIconService {
         return iIconMapper.update(icon) > 0;
     }
 
+    @Override
     public boolean deleteByIds(Set<Long> ids) {
         return iIconMapper.deleteByIds(ids) > 0;
     }

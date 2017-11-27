@@ -41,10 +41,12 @@ public class SimplePage implements IPage {
         this.pageSize = pageSize;
     }
 
+    @Override
     public int getTotalRecord() {
         return totalRecord;
     }
 
+    @Override
     public void setTotalRecord(int totalRecord) {
         this.totalRecord = totalRecord;
     }

@@ -3,8 +3,8 @@ package me.jinkun.rds.authorization.interceptor;
 import com.alibaba.fastjson.JSON;
 import me.jinkun.rds.authorization.annotation.Authorization;
 import me.jinkun.rds.authorization.manager.token.ITokenManager;
-import me.jinkun.rds.core.resp.RespResult;
 import me.jinkun.rds.config.Constants;
+import me.jinkun.rds.core.support.web.ResultCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -25,6 +25,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private ITokenManager manager;
 
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //如果不是映射到方法直接通过
         if (!(handler instanceof HandlerMethod)) {
@@ -43,7 +44,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                     response.sendRedirect("/login.html");
                 } else {
                     OutputStream os = response.getOutputStream();
-                    os.write(JSON.toJSONString(RespResult.fail("请重新登录")).getBytes());
+                    os.write(JSON.toJSONString(ResultCode.NO_LOGIN).getBytes());
                     os.flush();
                 }
                 return false;

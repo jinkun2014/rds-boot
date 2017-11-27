@@ -122,9 +122,9 @@ public class AppErrorController implements ErrorController {
     private Map<String, Object> getErrorAttributes(HttpServletRequest request, boolean includeStackTrace) {
         RequestAttributes requestAttributes = new ServletRequestAttributes(request);
         Map<String, Object> map = this.errorAttributes.getErrorAttributes(requestAttributes, includeStackTrace);
-        String URL = request.getRequestURL().toString();
-        map.put("URL", URL);
-        logger.debug("AppErrorController.method [error info]: status-" + map.get("status") + ", request url-" + URL);
+        String url = request.getRequestURL().toString();
+        map.put("URL", url);
+        logger.debug("AppErrorController.method [error info]: status-" + map.get("status") + ", request url-" + url);
         return map;
     }
 

@@ -42,14 +42,17 @@ public class ResourceServiceImpl implements IResourceService {
         return Optional.of(resource);
     }
 
+    @Override
     public List<Resource> loads(Resource resource, Set<String> fields, Set<ISort> sortSet, IPage page) {
         return iResourceMapper.loads(resource, fields, sortSet, page);
     }
 
+    @Override
     public int loadCount(Resource resource) {
         return iResourceMapper.loadCount(resource);
     }
 
+    @Override
     public boolean saveOrUpdate(Resource resource) {
         boolean save = Objects.isNull(resource.getId());
         boolean flag;
@@ -66,6 +69,7 @@ public class ResourceServiceImpl implements IResourceService {
         return flag;
     }
 
+    @Override
     public boolean deleteByIds(Set<Long> ids) {
         ids.stream().forEach(id -> {
             recursionDelete(id);

@@ -42,14 +42,17 @@ public class UserServiceImpl implements IUserService {
         return Optional.of(user);
     }
 
+    @Override
     public List<User> loads(User user, Set<String> fields, Set<ISort> sortSet, IPage page) {
         return iUserMapper.loads(user, fields, sortSet, page);
     }
 
+    @Override
     public int loadCount(User user) {
         return iUserMapper.loadCount(user);
     }
 
+    @Override
     public boolean saveOrUpdate(User user) {
         boolean save = Objects.isNull(user.getId());
         Date now = new Date();
@@ -62,6 +65,7 @@ public class UserServiceImpl implements IUserService {
         return iUserMapper.update(user) > 0;
     }
 
+    @Override
     public boolean deleteByIds(Set<Long> ids) {
         int count = iUserMapper.deleteByIds(ids);
         boolean flag = count > 0;

@@ -1,6 +1,7 @@
 package me.jinkun.rds.config;
 
-import me.jinkun.rds.core.resp.RespResult;
+import me.jinkun.rds.core.support.web.JsonViewData;
+import me.jinkun.rds.core.support.web.ResultCode;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,7 +16,7 @@ public class GlobalExceptionHandler {
     @ResponseBody //在返回自定义相应类的情况下必须有，这是@ControllerAdvice注解的规定
     public Object exceptionHandler(RuntimeException e, HttpServletResponse response) {
         e.printStackTrace();
-        return RespResult.fail("发生未知错误,请联系管理员");
+        return new JsonViewData(ResultCode.SYSTEM_ERROR);
     }
     //@ExceptionHandler(value = Exception.class)
 //    public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {

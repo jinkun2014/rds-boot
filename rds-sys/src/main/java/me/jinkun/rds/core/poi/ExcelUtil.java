@@ -40,7 +40,7 @@ public class ExcelUtil<T> {
         try {
             HSSFWorkbook workbook = new HSSFWorkbook(input);
             HSSFSheet sheet = workbook.getSheet(sheetName);
-            if (!sheetName.trim().equals("")) {
+            if (!"".equals(sheetName.trim())) {
                 sheet = workbook.getSheet(sheetName);// 如果指定sheet名,则取指定sheet中的内容.  
             }
             if (sheet == null) {
@@ -84,7 +84,7 @@ public class ExcelUtil<T> {
                         } else {
                             c = cell.getStringCellValue();
                         }
-                        if (c == null || c.equals("")) {
+                        if (c == null || "".equals(c)) {
                             continue;
                         }
                         entity = (entity == null ? clazz.newInstance() : entity);// 如果不存在实例则新建.  
@@ -143,8 +143,7 @@ public class ExcelUtil<T> {
      *
      * @param output java输出流
      */
-    public boolean exportExcel(List<T> lists[], String sheetNames[],
-                               OutputStream output) {
+    public boolean exportExcel(List<T>[] lists, String[] sheetNames, OutputStream output) {
         if (lists.length != sheetNames.length) {
             System.out.println("数组长度不一致");
             return false;
@@ -283,10 +282,10 @@ public class ExcelUtil<T> {
         CellRangeAddressList regions = new CellRangeAddressList(firstRow,
                 endRow, firstCol, endCol);
         // 数据有效性对象  
-        HSSFDataValidation data_validation_view = new HSSFDataValidation(
+        HSSFDataValidation dataValidationView = new HSSFDataValidation(
                 regions, constraint);
-        data_validation_view.createPromptBox(promptTitle, promptContent);
-        sheet.addValidationData(data_validation_view);
+        dataValidationView.createPromptBox(promptTitle, promptContent);
+        sheet.addValidationData(dataValidationView);
         return sheet;
     }
 
@@ -311,9 +310,9 @@ public class ExcelUtil<T> {
         CellRangeAddressList regions = new CellRangeAddressList(firstRow,
                 endRow, firstCol, endCol);
         // 数据有效性对象  
-        HSSFDataValidation data_validation_list = new HSSFDataValidation(
+        HSSFDataValidation dataValidationList = new HSSFDataValidation(
                 regions, constraint);
-        sheet.addValidationData(data_validation_list);
+        sheet.addValidationData(dataValidationList);
         return sheet;
     }
 

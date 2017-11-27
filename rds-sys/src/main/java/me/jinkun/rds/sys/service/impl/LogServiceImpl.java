@@ -89,7 +89,7 @@ public class LogServiceImpl implements ILogService {
     public String exportXls(Set<Long> ids) {
        List<Log> logList =  iLogMapper.loadByIds(null,ids);
         //文件名
-        String fileName = new Date().getTime() + "";
+        String fileName = System.currentTimeMillis() + "";
 
         //生成xls
         OutputStream out = UtilFile.getOutputStream(xlsPath, fileName);

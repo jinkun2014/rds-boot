@@ -34,6 +34,7 @@ public enum  ResultCode implements EnumValue<Integer> {
         this.description = description;
     }
 
+    @Override
     public Integer getValue(){
         return value;
     }

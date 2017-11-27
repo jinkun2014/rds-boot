@@ -32,14 +32,17 @@ public class UserOrgServiceImpl implements IUserOrgService {
         return Optional.of(userOrg);
     }
 
+    @Override
     public List<UserOrg> loads(UserOrg userOrg, Set<String> fields, Set<ISort> sortSet, IPage page) {
         return iUserOrgMapper.loads(userOrg,fields,sortSet,page);
     }
 
+    @Override
     public int loadCount(UserOrg userOrg) {
         return iUserOrgMapper.loadCount(userOrg);
     }
 
+    @Override
     public boolean saveOrUpdate(UserOrg userOrg) {
         boolean save = Objects.isNull(userOrg.getId());
         if(save){
@@ -48,6 +51,7 @@ public class UserOrgServiceImpl implements IUserOrgService {
         return iUserOrgMapper.update(userOrg) > 0;
     }
 
+    @Override
     public boolean deleteByIds(Set<Long> ids) {
         return iUserOrgMapper.deleteByIds(ids) > 0;
     }

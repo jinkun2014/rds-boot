@@ -2,7 +2,6 @@ package me.jinkun.rds;
 
 import me.jinkun.rds.authorization.annotation.Authorization;
 import me.jinkun.rds.config.Constants;
-import me.jinkun.rds.core.resp.RespResult;
 import me.jinkun.rds.core.support.web.CommonController;
 import me.jinkun.rds.core.support.web.ResultCode;
 import me.jinkun.rds.core.utils.UtilDate;
@@ -65,7 +64,7 @@ public class IndexController extends CommonController {
     public Object login(User user, HttpSession session) {
         User u = iUserService.findByLoginNameAndPassword(user.getLoginName(), user.getPassword());
         if (u == null) {
-            return RespResult.fail("登录失败");
+            return setJsonViewData(ResultCode.NO_EXISTS);
         }
         u.setPassword(null);
         session.setAttribute(Constants.SESSION_USER_KEY, u);
