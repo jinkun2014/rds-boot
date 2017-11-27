@@ -33,14 +33,17 @@ public class ${EntityInfo.serviceImplName} implements ${EntityInfo.serviceName} 
         return Optional.of(${EntityInfo.entityName ? uncap_first});
     }
 
+    @Override
     public List<${EntityInfo.entityName}> loads(${EntityInfo.entityName} ${EntityInfo.entityName ? uncap_first}, Set<String> fields, Set<ISort> sortSet, IPage page) {
         return ${EntityInfo.daoName ? uncap_first}.loads(${EntityInfo.entityName ? uncap_first},fields,sortSet,page);
     }
 
+    @Override
     public int loadCount(${EntityInfo.entityName} ${EntityInfo.entityName ? uncap_first}) {
         return ${EntityInfo.daoName ? uncap_first}.loadCount(${EntityInfo.entityName ? uncap_first});
     }
 
+    @Override
     public boolean saveOrUpdate(${EntityInfo.entityName} ${EntityInfo.entityName ? uncap_first}) {
         boolean save = Objects.isNull(${EntityInfo.entityName ? uncap_first}.getId());
         if(save){
@@ -49,6 +52,7 @@ public class ${EntityInfo.serviceImplName} implements ${EntityInfo.serviceName} 
         return ${EntityInfo.daoName ? uncap_first}.update(${EntityInfo.entityName ? uncap_first}) > 0;
     }
 
+    @Override
     public boolean deleteByIds(Set<${EntityInfo.primaryKey.type}> ids) {
         return ${EntityInfo.daoName ? uncap_first}.deleteByIds(ids) > 0;
     }
