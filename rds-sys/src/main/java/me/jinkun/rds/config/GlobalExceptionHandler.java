@@ -1,29 +1,49 @@
 package me.jinkun.rds.config;
 
-import me.jinkun.rds.core.support.web.JsonViewData;
-import me.jinkun.rds.core.support.web.ResultCode;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonJsonView;
+import me.jinkun.rds.core.exception.BaseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 自定义异常处理
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(Exception.class)
-    //    @ExceptionHandler(value={RuntimeException.class,MyRuntimeException.class})
-    //    @ExceptionHandler//处理所有异常
-    @ResponseBody //在返回自定义相应类的情况下必须有，这是@ControllerAdvice注解的规定
-    public Object exceptionHandler(RuntimeException e, HttpServletResponse response) {
-        e.printStackTrace();
-        return new JsonViewData(ResultCode.SYSTEM_ERROR);
+
+    //TODO 不知道怎么设置Bean的初始化顺序
+    @Autowired
+    private FastJsonConfig fastJsonConfig;
+
+    private String errorViewName = "/error";
+
+    @ExceptionHandler(BaseException.class)
+    public ModelAndView exceptionHandler(RuntimeException e, HttpServletRequest request, HttpServletResponse response) {
+        boolean isRestful = true;
+        String accept = request.getHeader("accept");
+        if (!StringUtils.isEmpty(accept) && accept.contains("text/html")) {
+            isRestful = false;
+        }
+        BaseException base = (BaseException) e;
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setStatus(HttpStatus.OK);
+        modelAndView.addObject("resultCode", base.getEnumValue());
+        modelAndView.addObject("message", base.getMessage());
+        if (isRestful) {
+            FastJsonJsonView fastJsonJsonView = new FastJsonJsonView();
+            fastJsonJsonView.setFastJsonConfig(fastJsonConfig);
+            modelAndView.setView(fastJsonJsonView);
+        } else {
+            modelAndView.setViewName(errorViewName);
+        }
+        return modelAndView;
     }
-    //@ExceptionHandler(value = Exception.class)
-//    public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
-//        ModelAndView mav = new ModelAndView();
-//        mav.addObject("exception", e);
-//        mav.addObject("url", req.getRequestURL());
-//        mav.setViewName("404");
-//        return mav;
-//    }
 }

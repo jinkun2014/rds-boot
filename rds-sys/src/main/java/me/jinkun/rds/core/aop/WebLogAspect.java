@@ -1,7 +1,5 @@
 package me.jinkun.rds.core.aop;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -44,7 +42,6 @@ public class WebLogAspect {
         //拦截的实体类
         Object target = joinPoint.getTarget();
 
-        Api api = target.getClass().getAnnotation(Api.class);
 
         //拦截的方法名称
         String methodName = joinPoint.getSignature().getName();
@@ -56,8 +53,6 @@ public class WebLogAspect {
         Class[] parameterTypes = ((MethodSignature) joinPoint.getSignature()).getMethod().getParameterTypes();
 
         Method method = target.getClass().getMethod(methodName, parameterTypes);
-
-        ApiOperation operation = method.getAnnotation(ApiOperation.class);
 
     }
 
