@@ -3,15 +3,17 @@ package me.jinkun.rds.core;
 import java.io.Serializable;
 
 /**
- * 契约
- * 枚举值
+ * 枚举接口
  *
- * @author liangzhongqiu789@sina.com
- * @date 2017-05-22
- * @time 17:33
+ * @author JinKun
+ * @date 2017/11/28
+ * @time 10:16
  */
 public interface EnumValue<T extends Serializable> {
 
+    /**
+     * @return 枚举的值
+     */
     T getValue();
 
 }

@@ -28,9 +28,9 @@ public class UtilBean {
     /**
      * 拷贝值非null属性到目标
      *
-     * @param source
-     * @param target
-     * @param ignoreProperties
+     * @param source           源对象
+     * @param target           目标对象
+     * @param ignoreProperties 待忽略的属性
      */
     public static void copyPropertiesIgnoreNull(Object source, Object target, String... ignoreProperties) {
         try {

@@ -10,6 +10,10 @@ import java.io.OutputStream;
  * @Autor: Created by Jin Kun on 2017-05-25.
  */
 public class UtilFile {
+
+    private UtilFile() {
+    }
+
     public static boolean mkDirs(String path) {
         delDirs(new File(path));
         File descFile = new File(path);
